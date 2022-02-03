@@ -1,1 +1,1 @@
-# Prácticas EI, práctica por rama
+# Prácticas EI
