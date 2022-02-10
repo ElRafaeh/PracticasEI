@@ -15,6 +15,7 @@ class Tokenizador
 		// el campo delimiters se imprimirá con el string leído en el tokenizador (tras las modificaciones y eliminación de los caracteres repetidos correspondientes)
 
 	public:
+		void copia(const Tokenizador&); // Funcion auxiliar para copiar el tokenizador pasado
 		Tokenizador (const string& delimitadoresPalabra, const bool& kcasosEspeciales, const bool& minuscSinAcentos);
 			// Inicializa delimiters a delimitadoresPalabra filtrando que no se introduzcan delimitadores repetidos (de izquierda a derecha, en cuyo
 			// caso se eliminarían los que hayan sido repetidos por la derecha); casosEspeciales a kcasosEspeciales; pasarAminuscSinAcentos a minuscSinAcentos
@@ -25,12 +26,12 @@ class Tokenizador
 		Tokenizador& operator= (const Tokenizador&);
 		void Tokenizar (const string& str, list<string>& tokens) const;
 			// Tokeniza str devolviendo el resultado en tokens. La lista tokens se
-			// vaciará antes de almacenar el resultado de la tokenización.
+			// vaciar� antes de almacenar el resultado de la tokenización.
 		bool Tokenizar (const string& i, const string& f) const;
-			// Tokeniza el fichero i guardando la salida en el fichero f (una  palabra en cada línea del fichero). Devolverá true si se realiza la
-			// tokenización de forma correcta; false en caso contrario enviando a cerr  el mensaje correspondiente (p.ej. que no exista el archivo i)
+			// Tokeniza el fichero i guardando la salida en el fichero f (una  palabra en cada l�nea del fichero). Devolver� true si se realiza la
+			// tokenizaci�n de forma correcta; false en caso contrario enviando a cerr  el mensaje correspondiente (p.ej. que no exista el archivo i)
 		bool Tokenizar (const string & i) const;
-			// Tokeniza el fichero i guardando la salida en un fichero de nombre i añadiéndole extensión .tk (sin eliminar previamente la extensión de i
+			// Tokeniza el fichero i guardando la salida en un fichero de nombre i a�adi�ndole extensi�n .tk (sin eliminar previamente la extensión de i
 			// por ejemplo, del archivo pp.txt se generaría el resultado en pp.txt.tk), y que contendrá una palabra en cada línea del fichero. Devolverá true si
 			// se realiza la tokenización de forma correcta; false en caso contrario enviando a cerr el mensaje correspondiente (p.ej. que no exista el archivo i)
 		bool TokenizarListaFicheros (const string& i) const;
@@ -52,9 +53,9 @@ class Tokenizador
 			// Añade al final de “delimiters” los nuevos delimitadores que aparezcan en “nuevoDelimiters” (no se almacenarán caracteres repetidos)
 		string DelimitadoresPalabra() const;
 			// Devuelve “delimiters”
-		void CasosEspeciales (const bool& nuevoCasosEspeciales);
+		void CasosEspeciales(const bool& nuevoCasosEspeciales);
 			// Cambia la variable privada “casosEspeciales”
-		bool CasosEspeciales ();
+		bool CasosEspeciales();
 			// Devuelve el contenido de la variable privada “casosEspeciales”
 		void PasarAminuscSinAcentos (const bool& nuevoPasarAminuscSinAcentos);
 			// Cambia la variable privada “pasarAminuscSinAcentos”. Atención al formato de codificación del corpus (comando “file” de Linux). Para la
