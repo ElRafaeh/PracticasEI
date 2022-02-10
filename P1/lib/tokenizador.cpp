@@ -16,38 +16,40 @@ void Tokenizador::Tokenizar(const string& str, list<string>& tokens) const{
 
 // Versión del tokenizador de ficheros CLASE
 bool Tokenizador::Tokenizar(const string& NomFichEntr, const string& NomFichSal) const{
-    ifstream i;
-    ofstream f;
+    ifstream entry;
+    ofstream exit;
     string cadena;
     list<string> tokens;
 
-    i.open(NomFichEntr.c_str());
-    if(!i) {
+    entry.open(NomFichEntr.c_str());
+    
+    if(!entry) {
         cerr << "ERROR: No existe el archivo: " << NomFichEntr << endl;
         return false;
     }
     else
     {
-        while(!i.eof())
+        while(!entry.eof())
         {
             cadena="";
-            getline(i, cadena);
+            getline(entry, cadena);
             if(cadena.length()!=0)
             {
                 Tokenizar(cadena, tokens);
             }
         }
     }
-    i.close();
-    f.open(NomFichSal.c_str());
+
+    entry.close();
+    exit.open(NomFichSal.c_str());
     list<string>::iterator itS;
     
     for(itS= tokens.begin();itS!= tokens.end();itS++)
     {
-        f << (*itS) << endl;
+        exit << (*itS) << endl;
     }
 
-    f.close();
+    exit.close();
 
     return true;
 } 
