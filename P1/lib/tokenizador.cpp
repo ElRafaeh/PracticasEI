@@ -10,10 +10,29 @@ ostream& operator<<(ostream& os, const Tokenizador& tokenizador)
     return os;
 }
 
+// Funcion auxiliar que elimina duplicados de un string
+string Tokenizador::eliminaDuplicados(const string &aEliminar)
+{
+    string aux = aEliminar;
+
+    for(int i = 0; i < aux.size(); i++)
+    {
+        for(int j = 0; j < aux.size(); j++)
+        {
+            if(aux[i] == aux[j])
+            {
+                aux.erase(aux.begin()+j);
+            }
+        }
+    }
+
+    return aux;
+}
+
 // Funcion auxiliar de copia
 void Tokenizador::copia(const Tokenizador& copia)
 {
-    this->delimiters = copia.delimiters;
+    this->delimiters = eliminaDuplicados(copia.delimiters);
     this->casosEspeciales = copia.casosEspeciales;
     this->pasarAminuscSinAcentos = copia.pasarAminuscSinAcentos;
 }
@@ -21,7 +40,7 @@ void Tokenizador::copia(const Tokenizador& copia)
 // Constructor
 Tokenizador::Tokenizador(const string& delimitadoresPalabra, const bool& kcasosEspeciales, const bool& minuscSinAcentos)
 {
-    this->delimiters = delimitadoresPalabra;
+    this->delimiters = eliminaDuplicados(delimitadoresPalabra);
     this->casosEspeciales = kcasosEspeciales;
     this->pasarAminuscSinAcentos = minuscSinAcentos;
 }
@@ -60,13 +79,26 @@ Tokenizador& Tokenizador::operator=(const Tokenizador& tokenizadorParam)
 // Versión del tokenizador vista en CLASE
 void Tokenizador::Tokenizar(const string& str, list<string>& tokens) const
 {
-    string::size_type lastPos = str.find_first_not_of(delimiters,0);
-    string::size_type pos = str.find_first_of(delimiters,lastPos);
-    while(string::npos != pos || string::npos != lastPos)
+    if(pasarAminuscSinAcentos)
     {
-        tokens.push_back(str.substr(lastPos, pos - lastPos));
-        lastPos = str.find_first_not_of(delimiters, pos);
-        pos = str.find_first_of(delimiters, lastPos);
+        
+    }
+
+    // Comprueba si queremos tokenizar con los casos especiales o no 
+    if(!casosEspeciales)
+    {
+        string::size_type lastPos = str.find_first_not_of(delimiters,0);
+        string::size_type pos = str.find_first_of(delimiters,lastPos);
+        while(string::npos != pos || string::npos != lastPos)
+        {
+            tokens.push_back(str.substr(lastPos, pos - lastPos));
+            lastPos = str.find_first_not_of(delimiters, pos);
+            pos = str.find_first_of(delimiters, lastPos);
+        }
+    }
+    else
+    {
+        //Hacer mi tokenizar con casos especiales
     }
 }
 
@@ -114,23 +146,14 @@ bool Tokenizador::Tokenizar(const string& NomFichEntr, const string& NomFichSal)
 // Cambia delimiters por nuevoDelimiters
 void Tokenizador::DelimitadoresPalabra(const string& nuevoDelimiters)
 {
-    string aux = this->delimiters;
-
-    for(auto i = 0; i < nuevoDelimiters.size(); i++)
-    {
-        if(aux.find(nuevoDelimiters[i]))
-        {
-            nuevoDelimiters.erase(nuevoDelimiters.begin()+i, nuevoDelimiters.end());
-        }
-    }
-
-    this->delimiters = nuevoDelimiters;
+    this->delimiters = eliminaDuplicados(nuevoDelimiters);
 }
 
 // Añade delimitadores al final de delimiters
 void Tokenizador::AnyadirDelimitadoresPalabra(const string& nuevoDelimiters)
 {
     this->delimiters += nuevoDelimiters;
+    this->delimiters = eliminaDuplicados(this->delimiters);     
 }
 
 // Devuelve delimiters

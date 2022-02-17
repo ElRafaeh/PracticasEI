@@ -15,6 +15,7 @@ class Tokenizador
 		// el campo delimiters se imprimirÃ¡ con el string leÃ­do en el tokenizador (tras las modificaciones y eliminaciÃ³n de los caracteres repetidos correspondientes)
 
 	public:
+		string eliminaDuplicados(const string &conDuplicados); // Funcion auxiliar que elimina duplicados de un string
 		void copia(const Tokenizador&); // Funcion auxiliar para copiar el tokenizador pasado
 		Tokenizador (const string& delimitadoresPalabra, const bool& kcasosEspeciales, const bool& minuscSinAcentos);
 			// Inicializa delimiters a delimitadoresPalabra filtrando que no se introduzcan delimitadores repetidos (de izquierda a derecha, en cuyo
@@ -26,12 +27,12 @@ class Tokenizador
 		Tokenizador& operator= (const Tokenizador&);
 		void Tokenizar (const string& str, list<string>& tokens) const;
 			// Tokeniza str devolviendo el resultado en tokens. La lista tokens se
-			// vaciará antes de almacenar el resultado de la tokenizaciÃ³n.
+			// vaciarï¿½ antes de almacenar el resultado de la tokenizaciÃ³n.
 		bool Tokenizar (const string& i, const string& f) const;
-			// Tokeniza el fichero i guardando la salida en el fichero f (una  palabra en cada línea del fichero). Devolverá true si se realiza la
-			// tokenización de forma correcta; false en caso contrario enviando a cerr  el mensaje correspondiente (p.ej. que no exista el archivo i)
+			// Tokeniza el fichero i guardando la salida en el fichero f (una  palabra en cada lï¿½nea del fichero). Devolverï¿½ true si se realiza la
+			// tokenizaciï¿½n de forma correcta; false en caso contrario enviando a cerr  el mensaje correspondiente (p.ej. que no exista el archivo i)
 		bool Tokenizar (const string & i) const;
-			// Tokeniza el fichero i guardando la salida en un fichero de nombre i añadiéndole extensión .tk (sin eliminar previamente la extensiÃ³n de i
+			// Tokeniza el fichero i guardando la salida en un fichero de nombre i aï¿½adiï¿½ndole extensiï¿½n .tk (sin eliminar previamente la extensiÃ³n de i
 			// por ejemplo, del archivo pp.txt se generarÃ­a el resultado en pp.txt.tk), y que contendrÃ¡ una palabra en cada lÃ­nea del fichero. DevolverÃ¡ true si
 			// se realiza la tokenizaciÃ³n de forma correcta; false en caso contrario enviando a cerr el mensaje correspondiente (p.ej. que no exista el archivo i)
 		bool TokenizarListaFicheros (const string& i) const;
