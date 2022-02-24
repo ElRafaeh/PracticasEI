@@ -1,7 +1,7 @@
 #include "tokenizador.h"
 #include <fstream>
 #include <algorithm>
-#include <boost/locale.hpp>
+#include <unordered_map>
 
 // Operador salida
 ostream& operator<<(ostream& os, const Tokenizador& tokenizador)
@@ -12,21 +12,19 @@ ostream& operator<<(ostream& os, const Tokenizador& tokenizador)
 }
 
 // Funcion auxiliar que elimina duplicados de un string
-string Tokenizador::eliminaDuplicados(const string &aEliminar)
+string Tokenizador::eliminaDuplicados(string aEliminar)
 {
+    unordered_map<int, char> stringHash;
     string aux = aEliminar;
 
-    for(int i = 0; i < aux.size(); i++)
+    for(auto car: aEliminar)
     {
-        for(int j = 0; j < aux.size(); j++)
+        if(!(stringHash.insert(make_pair(car, car)).second))
         {
-            if(aux[i] == aux[j])
-            {
-                aux.erase(aux.begin()+j);
-            }
+            aux.erase(aux.begin() + aux.find_last_of(car));
         }
     }
-
+    
     return aux;
 }
 
@@ -55,7 +53,7 @@ Tokenizador::Tokenizador(const Tokenizador& copia)
 // Constructor por defecto de la clase
 Tokenizador::Tokenizador()
 {
-    this->delimiters = ",;:.-/+*\\ '\"{}[]()<>ï¿½!ï¿½?&#=\t\n\r@";
+    this->delimiters = ",;:.-/+*\\ '\"{}[]()<>¡!¿?&#=\t\n\r@";
     this->casosEspeciales = true;
     this->pasarAminuscSinAcentos = false;
 }
@@ -82,15 +80,16 @@ string Tokenizador::convertirSinMayusSinAcen(const string &str) const
 {
     string minusculas, minSinAcentos;
 
-    for(unsigned i = 0; i < str.size(); i++)
+    for(auto car : str)
     {
-        minusculas += tolower(str[i]);
+        minusculas += tolower(car);
+        //minSinAcentos
     }
 
     return minSinAcentos;
 }
 
-// Versiï¿½n del tokenizador vista en CLASE
+// Versi?n del tokenizador vista en CLASE
 void Tokenizador::Tokenizar(const string& str, list<string>& tokens) const
 {
     if(pasarAminuscSinAcentos)
@@ -116,7 +115,7 @@ void Tokenizador::Tokenizar(const string& str, list<string>& tokens) const
     }
 }
 
-// Versiï¿½n del tokenizador de ficheros CLASE
+// Versi?n del tokenizador de ficheros CLASE
 bool Tokenizador::Tokenizar(const string& NomFichEntr, const string& NomFichSal) const
 {
     ifstream entry;
@@ -163,7 +162,7 @@ void Tokenizador::DelimitadoresPalabra(const string& nuevoDelimiters)
     this->delimiters = eliminaDuplicados(nuevoDelimiters);
 }
 
-// Aï¿½ade delimitadores al final de delimiters
+// A?ade delimitadores al final de delimiters
 void Tokenizador::AnyadirDelimitadoresPalabra(const string& nuevoDelimiters)
 {
     this->delimiters += nuevoDelimiters;
