@@ -15,8 +15,6 @@ class Tokenizador
 		// el campo delimiters se imprimirá con el string leído en el tokenizador (tras las modificaciones y eliminación de los caracteres repetidos correspondientes)
 
 	public:
-		string eliminaDuplicados(const string &conDuplicados); // Funcion auxiliar que elimina duplicados de un string
-		void copia(const Tokenizador&); // Funcion auxiliar para copiar el tokenizador pasado
 		Tokenizador (const string& delimitadoresPalabra, const bool& kcasosEspeciales, const bool& minuscSinAcentos);
 			// Inicializa delimiters a delimitadoresPalabra filtrando que no se introduzcan delimitadores repetidos (de izquierda a derecha, en cuyo
 			// caso se eliminarían los que hayan sido repetidos por la derecha); casosEspeciales a kcasosEspeciales; pasarAminuscSinAcentos a minuscSinAcentos
@@ -72,6 +70,9 @@ class Tokenizador
 			// tokenizador vista en clase”
 		bool pasarAminuscSinAcentos;
 			// Si true pasará el token a minúsculas y quitará acentos, antes de realizar la tokenización
+		string eliminaDuplicados(const string &conDuplicados); // Funcion auxiliar que elimina duplicados de un string
+		void copia(const Tokenizador&); // Funcion auxiliar para copiar el tokenizador pasado
+		string convertirSinMayusSinAcen(const string&) const;
 };
 
 

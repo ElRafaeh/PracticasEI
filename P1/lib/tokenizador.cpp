@@ -1,6 +1,7 @@
 #include "tokenizador.h"
 #include <fstream>
 #include <algorithm>
+#include <boost/locale.hpp>
 
 // Operador salida
 ostream& operator<<(ostream& os, const Tokenizador& tokenizador)
@@ -54,7 +55,7 @@ Tokenizador::Tokenizador(const Tokenizador& copia)
 // Constructor por defecto de la clase
 Tokenizador::Tokenizador()
 {
-    this->delimiters = ",;:.-/+*\\ '\"{}[]()<>¡!¿?&#=\t\n\r@";
+    this->delimiters = ",;:.-/+*\\ '\"{}[]()<>ï¿½!ï¿½?&#=\t\n\r@";
     this->casosEspeciales = true;
     this->pasarAminuscSinAcentos = false;
 }
@@ -76,12 +77,25 @@ Tokenizador& Tokenizador::operator=(const Tokenizador& tokenizadorParam)
     return *this;
 }
 
-// Versión del tokenizador vista en CLASE
+// Funcion auxiliar que pasa un string pasado a otro sin minusculas y sin acentos
+string Tokenizador::convertirSinMayusSinAcen(const string &str) const
+{
+    string minusculas, minSinAcentos;
+
+    for(unsigned i = 0; i < str.size(); i++)
+    {
+        minusculas += tolower(str[i]);
+    }
+
+    return minSinAcentos;
+}
+
+// Versiï¿½n del tokenizador vista en CLASE
 void Tokenizador::Tokenizar(const string& str, list<string>& tokens) const
 {
     if(pasarAminuscSinAcentos)
     {
-        
+        string normalizado = convertirSinMayusSinAcen(str);
     }
 
     // Comprueba si queremos tokenizar con los casos especiales o no 
@@ -102,7 +116,7 @@ void Tokenizador::Tokenizar(const string& str, list<string>& tokens) const
     }
 }
 
-// Versión del tokenizador de ficheros CLASE
+// Versiï¿½n del tokenizador de ficheros CLASE
 bool Tokenizador::Tokenizar(const string& NomFichEntr, const string& NomFichSal) const
 {
     ifstream entry;
@@ -149,7 +163,7 @@ void Tokenizador::DelimitadoresPalabra(const string& nuevoDelimiters)
     this->delimiters = eliminaDuplicados(nuevoDelimiters);
 }
 
-// Añade delimitadores al final de delimiters
+// Aï¿½ade delimitadores al final de delimiters
 void Tokenizador::AnyadirDelimitadoresPalabra(const string& nuevoDelimiters)
 {
     this->delimiters += nuevoDelimiters;
