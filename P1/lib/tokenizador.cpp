@@ -75,26 +75,75 @@ Tokenizador& Tokenizador::operator=(const Tokenizador& tokenizadorParam)
     return *this;
 }
 
+// Funcion que devuelve el carácter pasado a minuscula
+char normalizarCaracter(char car)
+{
+    char aux;
+
+    switch (car)
+    {   
+        case '\300'...'\305':
+            return 'a';
+        case '\307':
+            return 'c';
+        case '\310'...'\313':
+            return 'e';
+        case '\314'...'\317':
+            return 'i';
+        //case '\321':
+        //    return 'n';
+        case '\322'...'\326':
+            return 'o';
+        case '\331'...'\334':
+            return 'u';
+        case '\335':
+            return 'y';    
+        case '\340'...'\345':
+            return 'a';
+        case '\347':
+            return 'c';
+        case '\350'...'\353':
+            return 'e';
+        case '\354'...'\357':
+            return 'i';
+        //case '\361':
+        //    return 'ñ';
+        case '\362'...'\366':
+            return 'o';
+        case '\371'...'\374':
+            return 'u';
+        case '\375':
+            return 'y';
+        case '\377':
+            return 'y';
+        default:
+            return car;
+            break;
+    }
+}
+
+
 // Funcion auxiliar que pasa un string pasado a otro sin minusculas y sin acentos
 string Tokenizador::convertirSinMayusSinAcen(const string &str) const
 {
-    string minusculas, minSinAcentos;
+    string minusculas;
 
     for(auto car : str)
     {
-        minusculas += tolower(car);
-        //minSinAcentos
+        minusculas += tolower(normalizarCaracter(car));   
     }
 
-    return minSinAcentos;
+    return minusculas;
 }
 
 // Versi?n del tokenizador vista en CLASE
 void Tokenizador::Tokenizar(const string& str, list<string>& tokens) const
 {
+    string normalizado;
+
     if(pasarAminuscSinAcentos)
     {
-        string normalizado = convertirSinMayusSinAcen(str);
+        normalizado = convertirSinMayusSinAcen(str);
     }
 
     // Comprueba si queremos tokenizar con los casos especiales o no 
