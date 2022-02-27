@@ -16,7 +16,7 @@ string Tokenizador::eliminaDuplicados(string aEliminar)
 {
     unordered_map<int, char> stringHash;
     string aux = aEliminar;
-
+    
     for(auto car: aEliminar)
     {
         if(!(stringHash.insert(make_pair(car, car)).second))
@@ -42,12 +42,16 @@ Tokenizador::Tokenizador(const string& delimitadoresPalabra, const bool& kcasosE
     this->delimiters = eliminaDuplicados(delimitadoresPalabra);
     this->casosEspeciales = kcasosEspeciales;
     this->pasarAminuscSinAcentos = minuscSinAcentos;
+    this->delimiters += " \n";
+    this->delimiters = eliminaDuplicados(this->delimiters);
 }
 
 // Constructor de copia
 Tokenizador::Tokenizador(const Tokenizador& copia)
 {
     this->copia(copia);
+    this->delimiters += " \n";
+    this->delimiters = eliminaDuplicados(this->delimiters);
 }
 
 // Constructor por defecto de la clase
@@ -124,7 +128,7 @@ char normalizarCaracter(char car)
 
 
 // Funcion auxiliar que pasa un string pasado a otro sin minusculas y sin acentos
-string Tokenizador::convertirSinMayusSinAcen(const string &str) const
+string Tokenizador::convertirSinMayusSinAcen(string str) const
 {
     string minusculas;
 
@@ -136,32 +140,59 @@ string Tokenizador::convertirSinMayusSinAcen(const string &str) const
     return minusculas;
 }
 
-// Versi?n del tokenizador vista en CLASE
-void Tokenizador::Tokenizar(const string& str, list<string>& tokens) const
+// Funcion tokenizar sin casos especiales
+void Tokenizador::TokenizarSinCasosEspeciales(const string& str, list<string>& tokens) const
 {
-    string normalizado;
-
-    if(pasarAminuscSinAcentos)
+    string::size_type lastPos = str.find_first_not_of(delimiters,0);
+    string::size_type pos = str.find_first_of(delimiters,lastPos);
+    while(string::npos != pos || string::npos != lastPos)
     {
-        normalizado = convertirSinMayusSinAcen(str);
+        tokens.push_back(str.substr(lastPos, pos - lastPos));
+        lastPos = str.find_first_not_of(delimiters, pos);
+        pos = str.find_first_of(delimiters, lastPos);
+    }
+}
+
+// Función para sacar url
+bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const
+{
+    if (str.find("http:", lastPos) == lastPos || str.find("https:", lastPos) == lastPos || str.find("ftp:", lastPos) == lastPos)
+    {
+        pos = str.find_first_of(" ", lastPos);
+        tokens.push_back(str.substr(lastPos, pos - lastPos));
+        lastPos = str.find_first_not_of(delimiters, pos);
+        pos = str.find_first_of(delimiters, lastPos);
+        return true;
     }
 
-    // Comprueba si queremos tokenizar con los casos especiales o no 
-    if(!casosEspeciales)
+    return false;
+}
+
+
+// Funcion tokenizar con casos especiales
+void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &tokens) const
+{
+    string::size_type lastPos = str.find_first_not_of(delimiters,0);
+    string::size_type pos = str.find_first_of(delimiters,lastPos);
+    
+    while(string::npos != pos || string::npos != lastPos)
     {
-        string::size_type lastPos = str.find_first_not_of(delimiters,0);
-        string::size_type pos = str.find_first_of(delimiters,lastPos);
-        while(string::npos != pos || string::npos != lastPos)
+        if(!(casoUrl(tokens, str, pos, lastPos)))
         {
             tokens.push_back(str.substr(lastPos, pos - lastPos));
             lastPos = str.find_first_not_of(delimiters, pos);
             pos = str.find_first_of(delimiters, lastPos);
         }
     }
-    else
-    {
-        //Hacer mi tokenizar con casos especiales
-    }
+}
+
+// Versi?n del tokenizador vista en CLASE
+void Tokenizador::Tokenizar(string str, list<string>& tokens) const
+{
+    if(pasarAminuscSinAcentos) { str = convertirSinMayusSinAcen(str); }
+
+    // Comprueba si queremos tokenizar con los casos especiales o no 
+    casosEspeciales ? TokenizarCasosEspeciales(str, tokens) : TokenizarSinCasosEspeciales(str, tokens);  
 }
 
 // Versi?n del tokenizador de ficheros CLASE

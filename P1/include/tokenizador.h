@@ -21,9 +21,15 @@ class Tokenizador
 		Tokenizador (const Tokenizador&);
 		Tokenizador ();
 			// Inicializa delimiters=",;:.-/+*\\ '\"{}[]()<>¡!¿?&#=\t\n\r@"; casosEspeciales a true; pasarAminuscSinAcentos a false
-		~Tokenizador (); // Pone delimiters=""
+		~Tokenizador (); 
+			// Pone delimiters=""
 		Tokenizador& operator= (const Tokenizador&);
-		void Tokenizar (const string& str, list<string>& tokens) const;
+			// Operador igualdad
+		void TokenizarSinCasosEspeciales(const string& str, list<string>& tokens) const; 
+			//Función para tokenizar sin casos especiales activados
+		void TokenizarCasosEspeciales(const string& str, list<string>& tokens) const; 
+			//Función para tokenizar con casos especiales activados
+		void Tokenizar (string str, list<string>& tokens) const;
 			// Tokeniza str devolviendo el resultado en tokens. La lista tokens se
 			// vaciar? antes de almacenar el resultado de la tokenización.
 		bool Tokenizar (const string& i, const string& f) const;
@@ -70,9 +76,22 @@ class Tokenizador
 			// tokenizador vista en clase?
 		bool pasarAminuscSinAcentos;
 			// Si true pasará el token a minúsculas y quitará acentos, antes de realizar la tokenización
-		string eliminaDuplicados(string conDuplicados); // Funcion auxiliar que elimina duplicados de un string
-		void copia(const Tokenizador&); // Funcion auxiliar para copiar el tokenizador pasado
-		string convertirSinMayusSinAcen(const string&) const;
+		string eliminaDuplicados(string conDuplicados); 
+			// Funcion auxiliar que elimina duplicados de un string
+		void copia(const Tokenizador&); 
+			// Funcion auxiliar para copiar el tokenizador pasado
+		string convertirSinMayusSinAcen(string) const;
+			// Funcion auxiliar para quitar mayusculas y acentos a un string pasado
+		bool casoUrl(list<string> &tokens, const string &entero, string::size_type &pos, string::size_type &lastPos) const;
+			// Función que verifica si se trata de un caso Url o no, y mete el tokens con la URL
+		bool casoDecimal() const;
+			// Funcion que verifica si se trata de un caso decimal o no y almacena en tokens
+		bool casoEmail() const;
+			// Funcion que verifica si se trata de un caso email o no y almacena en 
+		bool casoAcronimo() const;
+			// Funcion que verifica si se trata de un caso acronimo o no y almacena en tokens
+		bool casoMultipalabra() const;
+			// Funcion que verifica si se trata de un caso mulltiplabra o no y almacena en tokens
 };
 
 
