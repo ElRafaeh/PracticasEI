@@ -169,20 +169,21 @@ string Tokenizador::quitarEspeciales(const string &especiales) const
 }
 
 // Función para sacar url
-bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const
+bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresUrl) const
 {
     if (str.find("http:", lastPos) == lastPos || str.find("https:", lastPos) == lastPos || str.find("ftp:", lastPos) == lastPos)
     {
-        string delimitadoresUrl = quitarEspeciales("_:/.?&-=#@");
         char siguienteAHtpp = str[str.find_first_of(":", lastPos) + 1];
         bool sigueCaracter = (delimitadoresUrl.find(siguienteAHtpp) && siguienteAHtpp != '\0');
 
+        // Si después de los dos puntos no le sigue ningun caracter, no se considera URL
         if(!sigueCaracter) return false;
 
         pos = str.find_first_of(delimitadoresUrl, lastPos);
         tokens.push_back(str.substr(lastPos, pos - lastPos));
         lastPos = str.find_first_not_of(delimiters, pos);
         pos = str.find_first_of(delimiters, lastPos);
+
         return true;
     }
 
@@ -196,8 +197,23 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
 }
 
 // Funcion para verificar si es email o no y guardar el token correspondiente
-bool Tokenizador::casoEmail(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const
+bool Tokenizador::casoEmail(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresEmail) const
 {
+    string::size_type posAnterior = this->delimiters.find(str[pos-1]), posPosterior = this->delimiters.find(str[pos+1]);
+    bool condicionMenosDeUnDelimitador = (str[str.find_first_of(delimitadoresEmail, pos+1)] == ' ') || (str[str.find_first_of(delimitadoresEmail, pos+1)] == '\n') || (str[str.find_first_of(delimitadoresEmail, pos+1)] == '\0');
+
+    if((str[pos] == '@') && (str[pos+1] != '\0') && (posPosterior == string::npos) && (str[pos-1] != '\0') && (posAnterior == string::npos) && condicionMenosDeUnDelimitador)  
+    {   
+        string::size_type posAux = str.find_first_of(delimitadoresEmail, pos+1);
+
+        tokens.push_back(str.substr(lastPos, posAux - lastPos)); 
+
+        lastPos = str.find_first_not_of(delimiters, posAux);
+        pos = str.find_first_of(delimiters, lastPos);;
+
+        return true;
+    }
+
     return false;
 }
 
@@ -206,14 +222,15 @@ void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &toke
 {
     string::size_type lastPos = str.find_first_not_of(delimiters,0);
     string::size_type pos = str.find_first_of(delimiters,lastPos);
+    string delimitadoresUrl = quitarEspeciales("_:/.?&-=#@"), delimitadoresEmail = quitarEspeciales(".-_");
     
     while(string::npos != pos || string::npos != lastPos)
     {
-        if(!casoUrl(tokens, str, pos, lastPos))
+        if(!casoUrl(tokens, str, pos, lastPos, delimitadoresUrl))
         {
             if(!casoDecimal(tokens, str, pos, lastPos))
             {
-                if(!casoEmail(tokens, str, pos, lastPos))
+                if(!casoEmail(tokens, str, pos, lastPos, delimitadoresEmail))
                 {
                     tokens.push_back(str.substr(lastPos, pos - lastPos));
                     lastPos = str.find_first_not_of(delimiters, pos);

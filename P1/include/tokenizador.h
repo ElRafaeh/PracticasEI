@@ -82,11 +82,11 @@ class Tokenizador
 			// Funcion auxiliar para copiar el tokenizador pasado
 		string convertirSinMayusSinAcen(string) const;
 			// Funcion auxiliar para quitar mayusculas y acentos a un string pasado
-		bool casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const;
+		bool casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim) const;
 			// Función que verifica si se trata de un caso Url o no, y mete el tokens con la URL
 		bool casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const;
 			// Funcion que verifica si se trata de un caso decimal o no y almacena en tokens
-		bool casoEmail(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const;
+		bool casoEmail(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim) const;
 			// Funcion que verifica si se trata de un caso email o no y almacena en 
 		bool casoAcronimo(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const;
 			// Funcion que verifica si se trata de un caso acronimo o no y almacena en tokens
