@@ -153,12 +153,33 @@ void Tokenizador::TokenizarSinCasosEspeciales(const string& str, list<string>& t
     }
 }
 
+// Funcion que devuelve los delimitadores habiendole quitados los delimitadores pasador por argumento
+string Tokenizador::quitarEspeciales(const string &especiales) const
+{
+    string aux = this->delimiters;
+    string::size_type pos = aux.find_first_of(especiales);
+
+    while(pos != string::npos)
+    {
+        aux.erase(aux.begin() + pos);
+        pos = aux.find_first_of(especiales);
+    }
+
+    return aux;
+}
+
 // Función para sacar url
 bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const
 {
     if (str.find("http:", lastPos) == lastPos || str.find("https:", lastPos) == lastPos || str.find("ftp:", lastPos) == lastPos)
     {
-        pos = str.find_first_of(" ", lastPos);
+        string delimitadoresUrl = quitarEspeciales("_:/.?&-=#@");
+        char siguienteAHtpp = str[str.find_first_of(":", lastPos) + 1];
+        bool sigueCaracter = (delimitadoresUrl.find(siguienteAHtpp) && siguienteAHtpp != '\0');
+
+        if(!sigueCaracter) return false;
+
+        pos = str.find_first_of(delimitadoresUrl, lastPos);
         tokens.push_back(str.substr(lastPos, pos - lastPos));
         lastPos = str.find_first_not_of(delimiters, pos);
         pos = str.find_first_of(delimiters, lastPos);
@@ -168,6 +189,17 @@ bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_
     return false;
 }
 
+// Funcion para verificar si es decimal o no y guardar el token correspondiente
+bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const
+{
+    return false;
+}
+
+// Funcion para verificar si es email o no y guardar el token correspondiente
+bool Tokenizador::casoEmail(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const
+{
+    return false;
+}
 
 // Funcion tokenizar con casos especiales
 void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &tokens) const
@@ -177,11 +209,17 @@ void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &toke
     
     while(string::npos != pos || string::npos != lastPos)
     {
-        if(!(casoUrl(tokens, str, pos, lastPos)))
+        if(!casoUrl(tokens, str, pos, lastPos))
         {
-            tokens.push_back(str.substr(lastPos, pos - lastPos));
-            lastPos = str.find_first_not_of(delimiters, pos);
-            pos = str.find_first_of(delimiters, lastPos);
+            if(!casoDecimal(tokens, str, pos, lastPos))
+            {
+                if(!casoEmail(tokens, str, pos, lastPos))
+                {
+                    tokens.push_back(str.substr(lastPos, pos - lastPos));
+                    lastPos = str.find_first_not_of(delimiters, pos);
+                    pos = str.find_first_of(delimiters, lastPos);
+                }
+            }
         }
     }
 }

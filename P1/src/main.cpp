@@ -24,7 +24,7 @@ int main()
     Tokenizador tokenizador;
     tokenizador.CasosEspeciales(true);
     list<string> tokens;
-    tokenizador.Tokenizar("p0 http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es http://ua.es p1 p2", tokens);
+    tokenizador.Tokenizar("catedraTelefonicaUA@iuii.ua.es p1 p2", tokens);
     cout << tokenizador << endl;
     tokenizador.AnyadirDelimitadoresPalabra("@/.");
     cout << tokenizador << endl;
