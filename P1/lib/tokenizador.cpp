@@ -217,34 +217,7 @@ bool Tokenizador::casoEmail(list<string> &tokens, const string &str, string::siz
     return false;
 }
 
-// Funcion para verificar si es acronimo o no y guardar el token correspondiente
-bool Tokenizador::casoAcronimo(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresAcronim) const
-{
-    string::size_type posAnterior = this->delimiters.find(str[pos-1]), posPosterior = this->delimiters.find(str[pos+1]), posAux= str.find_first_of(delimitadoresAcronim, lastPos);
-    string tokenAcumulador;
-
-    while((str[pos] == '.') && (str[pos+1] != '\0') && (posPosterior == string::npos) && (str[pos-1] != '\0') && (posAnterior == string::npos))
-    {         
-        tokenAcumulador += str.substr(lastPos, pos-lastPos) + str[pos];
-
-        lastPos = str.find_first_not_of(delimiters, pos);
-        pos = str.find_first_of(delimiters, lastPos);
-        lastPos = str.find_first_not_of(delimiters, pos);
-   
-        if (pos == posAux)
-        {
-            tokenAcumulador += str.substr(lastPos, pos-lastPos);
-            pos = str.find_first_of(delimiters, lastPos);
-            tokens.push_back(tokenAcumulador);
-           
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// Funcion para verificar si es email o no y guardar el token correspondiente
+// Funcion para verificar si es acronimo o multipalabra o no y guardar el token correspondiente
 bool Tokenizador::casoAcronimoYMulti(const char car, list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresAcronimOMulti) const
 {
     string::size_type posAnterior = this->delimiters.find(str[pos-1]), posPosterior = this->delimiters.find(str[pos+1]), posAux= str.find_first_of(delimitadoresAcronimOMulti, lastPos);

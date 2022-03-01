@@ -88,12 +88,8 @@ class Tokenizador
 			// Funcion que verifica si se trata de un caso decimal o no y almacena en tokens
 		bool casoEmail(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim) const;
 			// Funcion que verifica si se trata de un caso email o no y almacena en 
-		bool casoAcronimo(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim) const;
-			// Funcion que verifica si se trata de un caso acronimo o no y almacena en 
 		bool casoAcronimoYMulti(const char, list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim) const;
-			// Funcion que verifica si se trata de un caso acronimo o no y almacena en 
-		bool casoMultipalabra(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const;
-			// Funcion que verifica si se trata de un caso mulltiplabra o no y almacena en tokens
+			// Funcion que verifica si se trata de un caso de acronimo o multipalabra y almacena el token
 		string quitarEspeciales(const string &especiales) const;
 			// Funcion que devuelve los delimitadores habiendole quitados los delimitadores pasador por argumento
 
