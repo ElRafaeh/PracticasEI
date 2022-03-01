@@ -88,7 +88,7 @@ class Tokenizador
 			// Funcion que verifica si se trata de un caso decimal o no y almacena en tokens
 		bool casoEmail(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim) const;
 			// Funcion que verifica si se trata de un caso email o no y almacena en 
-		bool casoAcronimo(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const;
+		bool casoAcronimo(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim) const;
 			// Funcion que verifica si se trata de un caso acronimo o no y almacena en tokens
 		bool casoMultipalabra(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const;
 			// Funcion que verifica si se trata de un caso mulltiplabra o no y almacena en tokens

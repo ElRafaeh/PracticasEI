@@ -24,7 +24,7 @@ int main()
     Tokenizador tokenizador;
     tokenizador.CasosEspeciales(true);
     list<string> tokens;
-    tokenizador.Tokenizar("cat@iuii.ua.es@cd p1 p2", tokens);
+    tokenizador.Tokenizar("cat@iuii.ua.es@cd", tokens);
     cout << tokenizador << endl;
     tokenizador.AnyadirDelimitadoresPalabra("@/.");
     cout << tokenizador << endl;
