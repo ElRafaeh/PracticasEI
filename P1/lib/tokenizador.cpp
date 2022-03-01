@@ -217,12 +217,11 @@ bool Tokenizador::casoEmail(list<string> &tokens, const string &str, string::siz
     return false;
 }
 
-// Funcion para verificar si es email o no y guardar el token correspondiente
+// Funcion para verificar si es acronimo o no y guardar el token correspondiente
 bool Tokenizador::casoAcronimo(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresAcronim) const
 {
     string::size_type posAnterior = this->delimiters.find(str[pos-1]), posPosterior = this->delimiters.find(str[pos+1]), posAux= str.find_first_of(delimitadoresAcronim, lastPos);
     string tokenAcumulador;
-    //bool acronimo = false;
 
     while((str[pos] == '.') && (str[pos+1] != '\0') && (posPosterior == string::npos) && (str[pos-1] != '\0') && (posAnterior == string::npos))
     {         
@@ -230,18 +229,43 @@ bool Tokenizador::casoAcronimo(list<string> &tokens, const string &str, string::
 
         lastPos = str.find_first_not_of(delimiters, pos);
         pos = str.find_first_of(delimiters, lastPos);
-
+        lastPos = str.find_first_not_of(delimiters, pos);
+   
         if (pos == posAux)
         {
             tokenAcumulador += str.substr(lastPos, pos-lastPos);
-            lastPos = str.find_first_not_of(delimiters, pos);
             pos = str.find_first_of(delimiters, lastPos);
             tokens.push_back(tokenAcumulador);
            
             return true;
         }
+    }
 
-        //acronimo = true;
+    return false;
+}
+
+// Funcion para verificar si es email o no y guardar el token correspondiente
+bool Tokenizador::casoAcronimoYMulti(const char car, list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresAcronimOMulti) const
+{
+    string::size_type posAnterior = this->delimiters.find(str[pos-1]), posPosterior = this->delimiters.find(str[pos+1]), posAux= str.find_first_of(delimitadoresAcronimOMulti, lastPos);
+    string tokenAcumulador;
+
+    while((str[pos] == car) && (str[pos+1] != '\0') && (posPosterior == string::npos) && (str[pos-1] != '\0') && (posAnterior == string::npos))
+    {         
+        tokenAcumulador += str.substr(lastPos, pos-lastPos) + str[pos];
+
+        lastPos = str.find_first_not_of(delimiters, pos);
+        pos = str.find_first_of(delimiters, lastPos);
+   
+        if (pos == posAux)
+        {
+            tokenAcumulador += str.substr(lastPos, pos-lastPos);
+            tokens.push_back(tokenAcumulador);
+            lastPos = str.find_first_not_of(delimiters, pos);
+            pos = str.find_first_of(delimiters, lastPos);
+            
+            return true;
+        }
     }
 
     return false;
@@ -252,7 +276,7 @@ void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &toke
 {
     string::size_type lastPos = str.find_first_not_of(delimiters,0);
     string::size_type pos = str.find_first_of(delimiters,lastPos);
-    string delimitadoresUrl = quitarEspeciales("_:/.?&-=#@"), delimitadoresEmail = quitarEspeciales(".-_"), delimitadoresAcronim = quitarEspeciales(".");
+    string delimitadoresUrl = quitarEspeciales("_:/.?&-=#@"), delimitadoresEmail = quitarEspeciales(".-_"), delimitadoresAcronim = quitarEspeciales("."), delimitadoresMulti = quitarEspeciales("-");
     
     while(string::npos != pos || string::npos != lastPos)
     {
@@ -262,11 +286,14 @@ void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &toke
             {
                 if(!casoEmail(tokens, str, pos, lastPos, delimitadoresEmail))
                 {
-                    if(!casoAcronimo(tokens, str, pos, lastPos, delimitadoresEmail))
+                    if(!casoAcronimoYMulti('.', tokens, str, pos, lastPos, delimitadoresAcronim))
                     {
-                        tokens.push_back(str.substr(lastPos, pos - lastPos));
-                        lastPos = str.find_first_not_of(delimiters, pos);
-                        pos = str.find_first_of(delimiters, lastPos);
+                        if(!casoAcronimoYMulti('-', tokens, str, pos, lastPos, delimitadoresMulti))
+                        {
+                            tokens.push_back(str.substr(lastPos, pos - lastPos));
+                            lastPos = str.find_first_not_of(delimiters, pos);
+                            pos = str.find_first_of(delimiters, lastPos);
+                        }
                     }
                 }
             }
