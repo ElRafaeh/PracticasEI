@@ -27,7 +27,7 @@ class Tokenizador
 			// Operador igualdad
 		void TokenizarSinCasosEspeciales(const string& str, list<string>& tokens) const; 
 			//Función para tokenizar sin casos especiales activados
-		void TokenizarCasosEspeciales(const string& str, list<string>& tokens) const; 
+		void TokenizarCasosEspeciales(const string& str, list<string>& tokens, const string &delimiters) const; 
 			//Función para tokenizar con casos especiales activados
 		void Tokenizar (string str, list<string>& tokens) const;
 			// Tokeniza str devolviendo el resultado en tokens. La lista tokens se
@@ -76,21 +76,21 @@ class Tokenizador
 			// tokenizador vista en clase?
 		bool pasarAminuscSinAcentos;
 			// Si true pasará el token a minúsculas y quitará acentos, antes de realizar la tokenización
-		string eliminaDuplicados(string conDuplicados); 
+		string eliminaDuplicados(const string &conDuplicados) const; 
 			// Funcion auxiliar que elimina duplicados de un string
 		void copia(const Tokenizador&); 
 			// Funcion auxiliar para copiar el tokenizador pasado
 		string convertirSinMayusSinAcen(string) const;
 			// Funcion auxiliar para quitar mayusculas y acentos a un string pasado
-		bool casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim) const;
+		bool casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim, const string &delimiters) const;
 			// Función que verifica si se trata de un caso Url o no, y mete el tokens con la URL
-		bool casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const;
+		bool casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimiters) const;
 			// Funcion que verifica si se trata de un caso decimal o no y almacena en tokens
-		bool casoEmail(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim) const;
+		bool casoEmail(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim, const string &delimiters) const;
 			// Funcion que verifica si se trata de un caso email o no y almacena en 
-		bool casoAcronimoYMulti(const char, list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim) const;
+		bool casoAcronimoYMulti(const char, list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim, const string &delimiters) const;
 			// Funcion que verifica si se trata de un caso de acronimo o multipalabra y almacena el token
-		string quitarEspeciales(const string &especiales) const;
+		string quitarEspeciales(const string &especiales, const string &delimiters) const;
 			// Funcion que devuelve los delimitadores habiendole quitados los delimitadores pasador por argumento
 
 };

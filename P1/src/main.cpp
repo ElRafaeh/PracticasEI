@@ -1,48 +1,40 @@
-#include <iostream>
-#include "../include/tokenizador.h"
-
+#include <iostream> 
+#include <string>
+#include <list> 
+#include "tokenizador.h"
 
 using namespace std;
 
+///////// Comprobación de que vacíe la lista resultado
 
-void multiplabra(const string delimiters, const string& str, list<string> &tokens, string::size_type &lastPos,string::size_type &pos, const string::size_type inicio)
+void imprimirListaSTL(const list<string>& cadena)
 {
-    if(str[pos] == '-')
-    {
-        lastPos = str.find_first_not_of(delimiters, pos);
-        pos = str.find_first_of(delimiters, lastPos);
-        if (pos != string::npos && str[pos] == '-')
+        list<string>::const_iterator itCadena;
+        for(itCadena=cadena.begin();itCadena!=cadena.end();itCadena++)
         {
-            multiplabra(delimiters, str, tokens, lastPos, pos, inicio);
+                cout << (*itCadena) << ", ";
         }
-    }
-    tokens.push_back(str.substr(inicio, pos - inicio));
+        cout << endl;
 }
 
-int main()
+int
+main(void)
 {
-    Tokenizador tokenizador;
-    tokenizador.CasosEspeciales(true);
-    list<string> tokens;
-    tokenizador.Tokenizar("cat@iuii.ua.es@cd ..U..S.A -MS-DOS --M-S--DOS", tokens);
-    cout << tokenizador << endl;
-    tokenizador.AnyadirDelimitadoresPalabra("@/.");
-    cout << tokenizador << endl;
-    tokenizador.AnyadirDelimitadoresPalabra("@/.");
-    cout << tokenizador << endl;
+	bool kCasosEspeciales = true, kpasarAminusculas = false;
 
-    string delimiters = tokenizador.DelimitadoresPalabra();
-    string str = "MS-DOS";
+	list<string> lt1, lt2;
 
-    char a = str[-1];
+Tokenizador a("", true, false); 
+list<string> tokens; 
 
-    string s = "p0 http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es http://ua.es p1 p2";
-    string::size_type pene = s.find("http:", 6);
-    cout << endl;
+a.Tokenizar("http:", tokens);
+	imprimirListaSTL(tokens);
 
-    return 0;
+a.Tokenizar("http:////ab/", tokens);
+	imprimirListaSTL(tokens);
+
+a.Tokenizar("http:////ab.", tokens);
+	imprimirListaSTL(tokens);
+
+
 }
-
-
-
-

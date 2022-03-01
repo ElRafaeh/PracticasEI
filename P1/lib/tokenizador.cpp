@@ -12,7 +12,7 @@ ostream& operator<<(ostream& os, const Tokenizador& tokenizador)
 }
 
 // Funcion auxiliar que elimina duplicados de un string
-string Tokenizador::eliminaDuplicados(string aEliminar)
+string Tokenizador::eliminaDuplicados(const string &aEliminar) const
 {
     unordered_map<int, char> stringHash;
     string aux = aEliminar;
@@ -42,7 +42,6 @@ Tokenizador::Tokenizador(const string& delimitadoresPalabra, const bool& kcasosE
     this->delimiters = eliminaDuplicados(delimitadoresPalabra);
     this->casosEspeciales = kcasosEspeciales;
     this->pasarAminuscSinAcentos = minuscSinAcentos;
-    this->delimiters += " \n";
     this->delimiters = eliminaDuplicados(this->delimiters);
 }
 
@@ -50,7 +49,6 @@ Tokenizador::Tokenizador(const string& delimitadoresPalabra, const bool& kcasosE
 Tokenizador::Tokenizador(const Tokenizador& copia)
 {
     this->copia(copia);
-    this->delimiters += " \n";
     this->delimiters = eliminaDuplicados(this->delimiters);
 }
 
@@ -94,8 +92,8 @@ char normalizarCaracter(char car)
             return 'e';
         case '\314'...'\317':
             return 'i';
-        //case '\321':
-        //    return 'n';
+        case '\321':
+            return 'Ñ';
         case '\322'...'\326':
             return 'o';
         case '\331'...'\334':
@@ -110,8 +108,8 @@ char normalizarCaracter(char car)
             return 'e';
         case '\354'...'\357':
             return 'i';
-        //case '\361':
-        //    return 'ñ';
+        case '\361':
+            return 'ñ';
         case '\362'...'\366':
             return 'o';
         case '\371'...'\374':
@@ -154,9 +152,9 @@ void Tokenizador::TokenizarSinCasosEspeciales(const string& str, list<string>& t
 }
 
 // Funcion que devuelve los delimitadores habiendole quitados los delimitadores pasador por argumento
-string Tokenizador::quitarEspeciales(const string &especiales) const
+string Tokenizador::quitarEspeciales(const string &especiales, const string &delimiters) const
 {
-    string aux = this->delimiters;
+    string aux = delimiters;
     string::size_type pos = aux.find_first_of(especiales);
 
     while(pos != string::npos)
@@ -169,7 +167,7 @@ string Tokenizador::quitarEspeciales(const string &especiales) const
 }
 
 // Función para sacar url
-bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresUrl) const
+bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresUrl, const string &delimiters) const
 {
     if (str.find("http:", lastPos) == lastPos || str.find("https:", lastPos) == lastPos || str.find("ftp:", lastPos) == lastPos)
     {
@@ -191,15 +189,15 @@ bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_
 }
 
 // Funcion para verificar si es decimal o no y guardar el token correspondiente
-bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos) const
+bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimiters) const
 {
     return false;
 }
 
 // Funcion para verificar si es email o no y guardar el token correspondiente
-bool Tokenizador::casoEmail(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresEmail) const
+bool Tokenizador::casoEmail(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresEmail, const string &delimiters) const
 {
-    string::size_type posAnterior = this->delimiters.find(str[pos-1]), posPosterior = this->delimiters.find(str[pos+1]);
+    string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]);
     bool condicionMenosDeUnDelimitador = (str[str.find_first_of(delimitadoresEmail, pos+1)] == ' ') || (str[str.find_first_of(delimitadoresEmail, pos+1)] == '\n') || (str[str.find_first_of(delimitadoresEmail, pos+1)] == '\0');
 
     if((str[pos] == '@') && (str[pos+1] != '\0') && (posPosterior == string::npos) && (str[pos-1] != '\0') && (posAnterior == string::npos) && condicionMenosDeUnDelimitador)  
@@ -218,9 +216,9 @@ bool Tokenizador::casoEmail(list<string> &tokens, const string &str, string::siz
 }
 
 // Funcion para verificar si es acronimo o multipalabra o no y guardar el token correspondiente
-bool Tokenizador::casoAcronimoYMulti(const char car, list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresAcronimOMulti) const
+bool Tokenizador::casoAcronimoYMulti(const char car, list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresAcronimOMulti, const string &delimiters) const
 {
-    string::size_type posAnterior = this->delimiters.find(str[pos-1]), posPosterior = this->delimiters.find(str[pos+1]), posAux= str.find_first_of(delimitadoresAcronimOMulti, lastPos);
+    string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]), posAux= str.find_first_of(delimitadoresAcronimOMulti, lastPos);
     string tokenAcumulador;
 
     while((str[pos] == car) && (str[pos+1] != '\0') && (posPosterior == string::npos) && (str[pos-1] != '\0') && (posAnterior == string::npos))
@@ -230,7 +228,10 @@ bool Tokenizador::casoAcronimoYMulti(const char car, list<string> &tokens, const
         lastPos = str.find_first_not_of(delimiters, pos);
         pos = str.find_first_of(delimiters, lastPos);
    
-        if (pos == posAux)
+        posAnterior = delimiters.find(str[pos-1]);
+        posPosterior = delimiters.find(str[pos+1]);
+
+        if (pos == posAux || posPosterior != string::npos || posAnterior != string::npos)
         {
             tokenAcumulador += str.substr(lastPos, pos-lastPos);
             tokens.push_back(tokenAcumulador);
@@ -245,23 +246,23 @@ bool Tokenizador::casoAcronimoYMulti(const char car, list<string> &tokens, const
 }
 
 // Funcion tokenizar con casos especiales
-void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &tokens) const
+void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &tokens, const string &delimiters) const
 {
     string::size_type lastPos = str.find_first_not_of(delimiters,0);
     string::size_type pos = str.find_first_of(delimiters,lastPos);
-    string delimitadoresUrl = quitarEspeciales("_:/.?&-=#@"), delimitadoresEmail = quitarEspeciales(".-_"), delimitadoresAcronim = quitarEspeciales("."), delimitadoresMulti = quitarEspeciales("-");
+    string delimitadoresUrl = quitarEspeciales("_:/.?&-=#@", delimiters), delimitadoresEmail = quitarEspeciales(".-_", delimiters), delimitadoresAcronim = quitarEspeciales(".", delimiters), delimitadoresMulti = quitarEspeciales("-", delimiters);
     
     while(string::npos != pos || string::npos != lastPos)
     {
-        if(!casoUrl(tokens, str, pos, lastPos, delimitadoresUrl))
+        if(!casoUrl(tokens, str, pos, lastPos, delimitadoresUrl, delimiters))
         {
-            if(!casoDecimal(tokens, str, pos, lastPos))
+            if(!casoDecimal(tokens, str, pos, lastPos, delimiters))
             {
-                if(!casoEmail(tokens, str, pos, lastPos, delimitadoresEmail))
+                if(!casoEmail(tokens, str, pos, lastPos, delimitadoresEmail, delimiters))
                 {
-                    if(!casoAcronimoYMulti('.', tokens, str, pos, lastPos, delimitadoresAcronim))
+                    if(!casoAcronimoYMulti('.', tokens, str, pos, lastPos, delimitadoresAcronim, delimiters))
                     {
-                        if(!casoAcronimoYMulti('-', tokens, str, pos, lastPos, delimitadoresMulti))
+                        if(!casoAcronimoYMulti('-', tokens, str, pos, lastPos, delimitadoresMulti, delimiters))
                         {
                             tokens.push_back(str.substr(lastPos, pos - lastPos));
                             lastPos = str.find_first_not_of(delimiters, pos);
@@ -277,10 +278,13 @@ void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &toke
 // Versi?n del tokenizador vista en CLASE
 void Tokenizador::Tokenizar(string str, list<string>& tokens) const
 {
+    tokens.clear();
+    string delimiters = eliminaDuplicados(this->delimiters + " \n");
+
     if(pasarAminuscSinAcentos) { str = convertirSinMayusSinAcen(str); }
 
     // Comprueba si queremos tokenizar con los casos especiales o no 
-    casosEspeciales ? TokenizarCasosEspeciales(str, tokens) : TokenizarSinCasosEspeciales(str, tokens);  
+    casosEspeciales ? TokenizarCasosEspeciales(str, tokens, delimiters) : TokenizarSinCasosEspeciales(str, tokens);  
 }
 
 // Versi?n del tokenizador de ficheros CLASE
