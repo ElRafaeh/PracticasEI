@@ -27,29 +27,29 @@ main(void)
 Tokenizador a("-#", true, false); 
 list<string> tokens; 
 
-a.DelimitadoresPalabra("@.,&");
-a.Tokenizar("pal1 10.000,34 10,000.34 10.000.123.456.789.009,34 10,000,123,456,789,009.34 20.03 40,03 2005 10. 20, 10.0 20,0 La 20,12.456,7.8.9,", tokens);
+a.DelimitadoresPalabra("@.&");
+a.Tokenizar("U.S.A p1 e.g. p2. La", tokens);
 	imprimirListaSTL(tokens);
 
-a.Tokenizar(".34 ,56", tokens);
+a.DelimitadoresPalabra("");
+a.Tokenizar("U.S.A.U.S.A .p1 p1 e.g p2. La", tokens);
 	imprimirListaSTL(tokens);
 
-a.Tokenizar("pal1 10.00a 10.000.a.000 10/12/85 1,23E+10", tokens);
+a.Tokenizar("a&U.S.A p1 e.g p2. La", tokens);
 	imprimirListaSTL(tokens);
 
-a.Tokenizar("pal1&10.00@10.000&aaa@10/12/85", tokens);
-	imprimirListaSTL(tokens);
-
-a.Tokenizar(".34@@&,56", tokens);
+a.DelimitadoresPalabra("&");
+a.Tokenizar("a&U.S.A p1 e.g p2. La", tokens);
 	imprimirListaSTL(tokens);
 
 
 a.PasarAminuscSinAcentos(true);
-a.Tokenizar("Pal1&10.00@10.000&aaa@10/12/85 La", tokens);
+a.Tokenizar("a&U.S.A p1 e.g p2. La", tokens);
 	imprimirListaSTL(tokens);
 
+a.DelimitadoresPalabra(".&");
 a.CasosEspeciales (false);
-a.Tokenizar("Pal1&10.00@10.000&000@10/12/85 La", tokens);
+a.Tokenizar("a&U.S.A p1 e.g. p2. La", tokens);
 	imprimirListaSTL(tokens);
 
 
