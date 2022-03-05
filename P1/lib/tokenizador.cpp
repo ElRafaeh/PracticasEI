@@ -2,6 +2,9 @@
 #include <fstream>
 #include <algorithm>
 #include <unordered_map>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <cstdlib>
 
 // Operador salida
 ostream& operator<<(ostream& os, const Tokenizador& tokenizador)
@@ -189,34 +192,48 @@ bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_
 }
 
 // Funcion para verificar si es decimal o no y guardar el token correspondiente
-bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitersDecimal,const string &delimiters) const
+bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitersDecimal, const string &delimiters) const
 {
-    string delimNum = ".,";
-    string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]), a = delimNum.find(str[lastPos-1]);
+    string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]), posAux= str.find_first_of(delimitersDecimal, lastPos), almacenaPrimerLastPos = lastPos, almacenaPrimerPos = pos;;
+    string puntoComa = ".,", tokenAcumulador, numeros = "0123456789";
 
-    if((delimNum.find(str[lastPos-1]) != string::npos && isdigit(str[lastPos])) || (delimNum.find(str[pos]) != string::npos && isdigit(str[pos+1])))
-    {
-        string::size_type posAux = str.find_first_of(delimitersDecimal, pos+1), siguienteDelim = str.find_first_of(delimiters, pos+1);
+    while((puntoComa.find(str[pos]) != string::npos || puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos) && posAnterior == string::npos && posPosterior == string::npos)
+    {         
+        string ceroComa = "0", siguienteAacumular = str.substr(lastPos, pos-lastPos);;
 
-        // Si hay dos delimiters juntos se corta ahí el token
-        if(delimiters.find(str[siguienteDelim+1]) != string::npos)
+        if (puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos && lastPos == almacenaPrimerLastPos && str[almacenaPrimerLastPos-1] != '\0')
         {
-            posAux = siguienteDelim;
+            ceroComa += str[almacenaPrimerLastPos-1];
+            tokenAcumulador += ceroComa;
         }
 
-        if(delimiters.find(str[pos-1]) != string::npos || str[pos-1] == '\0')
-        {
-            tokens.push_back("0."+str.substr(lastPos, posAux - lastPos));
-        }
-        else
-        {
-            tokens.push_back(str.substr(lastPos, posAux - lastPos));
+        if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
+        { 
+            lastPos = almacenaPrimerLastPos;
+            pos = almacenaPrimerPos;
+            return false;
         }
 
-        lastPos = str.find_first_not_of(delimiters, posAux);    
-        pos = str.find_first_of(delimiters, lastPos);  
+        tokenAcumulador += siguienteAacumular + str[pos];
 
-        return true;
+        lastPos = str.find_first_not_of(delimiters, pos);
+        pos = str.find_first_of(delimiters, lastPos);
+   
+        char a = str[pos-1], b = str[pos+1];
+
+
+        posAnterior = delimiters.find(str[pos-1]);
+        posPosterior = delimiters.find(str[pos+1]);
+
+        if (pos == posAux || posPosterior != string::npos || posAnterior != string::npos || str[pos+1] == '\0')
+        {
+            tokenAcumulador += str.substr(lastPos, pos-lastPos);
+            tokens.push_back(tokenAcumulador);
+            lastPos = str.find_first_not_of(delimiters, pos);
+            pos = str.find_first_of(delimiters, lastPos);
+            
+            return true;
+        }
     }
 
     return false;
@@ -264,7 +281,7 @@ bool Tokenizador::casoAcronimoYMulti(const char car, list<string> &tokens, const
         posAnterior = delimiters.find(str[pos-1]);
         posPosterior = delimiters.find(str[pos+1]);
 
-        if (pos == posAux || posPosterior != string::npos || posAnterior != string::npos)
+        if (pos == posAux || posPosterior != string::npos || posAnterior != string::npos || str[pos+1] == '\0')
         {
             tokenAcumulador += str.substr(lastPos, pos-lastPos);
             tokens.push_back(tokenAcumulador);
@@ -312,7 +329,7 @@ void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &toke
 void Tokenizador::Tokenizar(string str, list<string>& tokens) const
 {
     tokens.clear();
-    string delimiters = eliminaDuplicados(this->delimiters + " \n");
+    string delimiters = eliminaDuplicados(this->delimiters + " \n\0");
 
     if(pasarAminuscSinAcentos) { str = convertirSinMayusSinAcen(str); }
 
@@ -360,6 +377,20 @@ bool Tokenizador::Tokenizar(const string& NomFichEntr, const string& NomFichSal)
 
     return true;
 } 
+
+/*bool Tokenizador::TokenizarDirectorio (const string& dirAIndexar) const {
+    struct stat dir;
+    // Compruebo la existencia del directorio
+    int err=stat(dirAIndexar.c_str(), &dir);
+    if(err==-1 || !S_ISDIR(dir.st_mode))
+        return false;
+    else {
+        // Hago una lista en un fichero con find>fich
+        string cmd="find "+dirAIndexar+" -follow |sort > .lista_fich";
+        system(cmd.c_str());
+        return TokenizarListaFicheros(".lista_fich");
+    }
+}*/
 
 // Cambia delimiters por nuevoDelimiters
 void Tokenizador::DelimitadoresPalabra(const string& nuevoDelimiters)

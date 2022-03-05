@@ -5,7 +5,7 @@
 
 using namespace std;
 
-///////// Comprobación de que vacíe la lista resultado
+///////// Comprobaciï¿½n de que vacï¿½e la lista resultado
 
 void imprimirListaSTL(const list<string>& cadena)
 {
@@ -20,37 +20,29 @@ void imprimirListaSTL(const list<string>& cadena)
 int
 main(void)
 {
-	bool kCasosEspeciales = true, kpasarAminusculas = false;
+    Tokenizador a(",", true, false);
+    list<string> tokens;
+    string s = "p0 http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es p1 p2";
+    a.Tokenizar(s, tokens);
+    imprimirListaSTL(tokens);
+    a.DelimitadoresPalabra("@");
+    a.Tokenizar(s, tokens);
+    imprimirListaSTL(tokens);
+    a.DelimitadoresPalabra("/ ");
+    a.Tokenizar(s, tokens);
+    imprimirListaSTL(tokens);
 
-	list<string> lt1, lt2;
+    a.DelimitadoresPalabra("_:/.?&-=#@");
+    a.Tokenizar(s, tokens);
+    imprimirListaSTL(tokens);
 
-Tokenizador a("-#", true, false); 
-list<string> tokens; 
+    a.DelimitadoresPalabra("/&");
+    s = "p0 hhttp://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013 p1 p2";
+    a.Tokenizar(s, tokens);
+    imprimirListaSTL(tokens);
 
-a.DelimitadoresPalabra("@.,&");
-a.Tokenizar("pal1 10.000,34 10,000.34 10.000.123.456.789.009,34 10,000,123,456,789,009.34 20.03 40,03 2005 10. 20, 10.0 20,0 La 20,12.456,7.8.9,", tokens);
-	imprimirListaSTL(tokens);
-
-a.Tokenizar(".34 ,56", tokens);
-	imprimirListaSTL(tokens);
-
-a.Tokenizar("pal1 10.00a 10.000.a.000 10/12/85 1,23E+10", tokens);
-	imprimirListaSTL(tokens);
-
-a.Tokenizar("pal1&10.00@10.000&aaa@10/12/85", tokens);
-	imprimirListaSTL(tokens);
-
-a.Tokenizar(".34@@&,56", tokens);
-	imprimirListaSTL(tokens);
-
-
-a.PasarAminuscSinAcentos(true);
-a.Tokenizar("Pal1&10.00@10.000&aaa@10/12/85 La", tokens);
-	imprimirListaSTL(tokens);
-
-a.CasosEspeciales (false);
-a.Tokenizar("Pal1&10.00@10.000&000@10/12/85 La", tokens);
-	imprimirListaSTL(tokens);
-
+    s = "p0 Http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013 p1 p2";
+    a.Tokenizar(s, tokens);
+    imprimirListaSTL(tokens);
 
 }
