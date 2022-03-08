@@ -96,7 +96,7 @@ char normalizarCaracter(char car)
         case '\314'...'\317':
             return 'i';
         case '\321':
-            return 'Ñ';
+            return 'N';
         case '\322'...'\326':
             return 'o';
         case '\331'...'\334':
@@ -112,7 +112,7 @@ char normalizarCaracter(char car)
         case '\354'...'\357':
             return 'i';
         case '\361':
-            return 'ñ';
+            return 'n';
         case '\362'...'\366':
             return 'o';
         case '\371'...'\374':
@@ -197,16 +197,19 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
     string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]), posAux= str.find_first_of(delimitersDecimal, lastPos), almacenaPrimerLastPos = lastPos, almacenaPrimerPos = pos;;
     string puntoComa = ".,", tokenAcumulador, numeros = "0123456789";
 
-    while((puntoComa.find(str[pos]) != string::npos || puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos) && posAnterior == string::npos && posPosterior == string::npos)
+    while((puntoComa.find(str[pos]) != string::npos || puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos) && (str[pos+1] != '\0') && (posPosterior == string::npos) && (str[pos-1] != '\0') && (posAnterior == string::npos))
     {         
-        string ceroComa = "0", siguienteAacumular = str.substr(lastPos, pos-lastPos);;
+        string siguienteAacumular = str.substr(lastPos, pos-lastPos);
 
+        // Miramos si el número empieza por punto o coma para añadirle el 0 del principio
         if (puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos && lastPos == almacenaPrimerLastPos && str[almacenaPrimerLastPos-1] != '\0')
         {
+            string ceroComa = "0";
             ceroComa += str[almacenaPrimerLastPos-1];
             tokenAcumulador += ceroComa;
         }
 
+        // Miramos si el substring de después del punto tiene algun caracter distinto a un número
         if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
         { 
             lastPos = almacenaPrimerLastPos;
@@ -214,26 +217,79 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
             return false;
         }
 
-        tokenAcumulador += siguienteAacumular + str[pos];
+        if(str[pos] == '.' || str[pos] == ',')
+        {
+            tokenAcumulador += siguienteAacumular + str[pos];
+        }
+        else
+        {
+            tokenAcumulador += siguienteAacumular;
+            tokens.push_back(tokenAcumulador);
+            lastPos = str.find_first_not_of(delimiters, pos);
+            pos = str.find_first_of(delimiters, lastPos);
+            return true;
+        }
 
         lastPos = str.find_first_not_of(delimiters, pos);
         pos = str.find_first_of(delimiters, lastPos);
-   
-        char a = str[pos-1], b = str[pos+1];
-
 
         posAnterior = delimiters.find(str[pos-1]);
         posPosterior = delimiters.find(str[pos+1]);
 
         if (pos == posAux || posPosterior != string::npos || posAnterior != string::npos || str[pos+1] == '\0')
         {
-            tokenAcumulador += str.substr(lastPos, pos-lastPos);
+            siguienteAacumular = str.substr(lastPos, pos-lastPos);
+            string caracteresFinales = "%$", caracterFinal;
+            bool almacenaCaracter = false;
+
+            if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
+            { 
+                if (siguienteAacumular.find_first_of(caracteresFinales) != siguienteAacumular.size()-1)
+                {
+                    lastPos = almacenaPrimerLastPos;
+                    pos = almacenaPrimerPos;
+                    return false;
+                }
+                else
+                {
+                    caracterFinal = siguienteAacumular[siguienteAacumular.size()-1];
+                    almacenaCaracter = true;
+                    siguienteAacumular.erase(siguienteAacumular.begin() + siguienteAacumular.size()-1);
+                }
+            }
+
+            tokenAcumulador += siguienteAacumular;
             tokens.push_back(tokenAcumulador);
+
+            if(almacenaCaracter)
+            {
+                tokens.push_back(caracterFinal);
+            }
+
             lastPos = str.find_first_not_of(delimiters, pos);
             pos = str.find_first_of(delimiters, lastPos);
             
             return true;
         }
+    }
+
+    if(puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos)
+    {
+        string ceroComa = "0", siguienteAacumular = str.substr(lastPos, pos-lastPos);
+        ceroComa += str[almacenaPrimerLastPos-1];
+
+        // Miramos si el substring de después del punto tiene algun caracter distinto a un número
+        if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
+        { 
+            lastPos = almacenaPrimerLastPos;
+            pos = almacenaPrimerPos;
+            return false;
+        }
+
+        tokens.push_back(ceroComa + siguienteAacumular);
+        lastPos = str.find_first_not_of(delimiters, pos);
+        pos = str.find_first_of(delimiters, lastPos);
+        return true;
     }
 
     return false;
@@ -245,7 +301,7 @@ bool Tokenizador::casoEmail(list<string> &tokens, const string &str, string::siz
     string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]);
     bool condicionMenosDeUnDelimitador = (str[str.find_first_of(delimitadoresEmail, pos+1)] == ' ') || (str[str.find_first_of(delimitadoresEmail, pos+1)] == '\n') || (str[str.find_first_of(delimitadoresEmail, pos+1)] == '\0');
 
-    if((str[pos] == '@') && (str[pos+1] != '\0') && (posPosterior == string::npos) && (str[pos-1] != '\0') && (posAnterior == string::npos) && condicionMenosDeUnDelimitador)  
+    if((str[pos] == '@') && (str[pos+1] != '\0') && (posPosterior == string::npos) && (posAnterior == string::npos) && condicionMenosDeUnDelimitador)  
     {   
         string::size_type posAux = str.find_first_of(delimitadoresEmail, pos+1), siguienteDelim = str.find_first_of(delimiters, pos+1);
 
@@ -300,7 +356,7 @@ void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &toke
 {
     string::size_type lastPos = str.find_first_not_of(delimiters,0);
     string::size_type pos = str.find_first_of(delimiters,lastPos);
-    string delimitadoresUrl = quitarEspeciales("_:/.?&-=#@", delimiters), delimitadoresDecimal = quitarEspeciales(".,", delimiters),delimitadoresEmail = quitarEspeciales(".-_", delimiters), delimitadoresAcronim = quitarEspeciales(".", delimiters), delimitadoresMulti = quitarEspeciales("-", delimiters);
+    string delimitadoresUrl = quitarEspeciales("_:/.?&-=#@", delimiters), delimitadoresDecimal = quitarEspeciales(".,%$", delimiters), delimitadoresEmail = quitarEspeciales(".-_", delimiters), delimitadoresAcronim = quitarEspeciales(".", delimiters), delimitadoresMulti = quitarEspeciales("-", delimiters);
     
     while(string::npos != pos || string::npos != lastPos)
     {
@@ -329,7 +385,7 @@ void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &toke
 void Tokenizador::Tokenizar(string str, list<string>& tokens) const
 {
     tokens.clear();
-    string delimiters = eliminaDuplicados(this->delimiters + " \n\0");
+    string delimiters = eliminaDuplicados(this->delimiters + " \n");
 
     if(pasarAminuscSinAcentos) { str = convertirSinMayusSinAcen(str); }
 
