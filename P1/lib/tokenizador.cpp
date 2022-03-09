@@ -58,7 +58,7 @@ Tokenizador::Tokenizador(const Tokenizador& copia)
 // Constructor por defecto de la clase
 Tokenizador::Tokenizador()
 {
-    this->delimiters = ",;:.-/+*\\ '\"{}[]()<>¡!¿?&#=\t\n\r@";
+    this->delimiters = ",;:.-/+*\\ '\"{}[]()<>ï¿½!ï¿½?&#=\t\n\r@";
     this->casosEspeciales = true;
     this->pasarAminuscSinAcentos = false;
 }
@@ -80,7 +80,7 @@ Tokenizador& Tokenizador::operator=(const Tokenizador& tokenizadorParam)
     return *this;
 }
 
-// Funcion que devuelve el carácter pasado a minuscula
+// Funcion que devuelve el carï¿½cter pasado a minuscula
 char normalizarCaracter(char car)
 {
     char aux;
@@ -96,7 +96,7 @@ char normalizarCaracter(char car)
         case '\314'...'\317':
             return 'i';
         case '\321':
-            return 'N';
+            return '\361';
         case '\322'...'\326':
             return 'o';
         case '\331'...'\334':
@@ -111,8 +111,6 @@ char normalizarCaracter(char car)
             return 'e';
         case '\354'...'\357':
             return 'i';
-        case '\361':
-            return 'n';
         case '\362'...'\366':
             return 'o';
         case '\371'...'\374':
@@ -135,7 +133,7 @@ string Tokenizador::convertirSinMayusSinAcen(string str) const
 
     for(auto car : str)
     {
-        minusculas += tolower(normalizarCaracter(car));   
+        islower(car) ? minusculas += car : minusculas += tolower(normalizarCaracter(car));               
     }
 
     return minusculas;
@@ -169,7 +167,7 @@ string Tokenizador::quitarEspeciales(const string &especiales, const string &del
     return aux;
 }
 
-// Función para sacar url
+// Funciï¿½n para sacar url
 bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresUrl, const string &delimiters) const
 {
     if (str.find("http:", lastPos) == lastPos || str.find("https:", lastPos) == lastPos || str.find("ftp:", lastPos) == lastPos)
@@ -177,7 +175,7 @@ bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_
         char siguienteAHtpp = str[str.find_first_of(":", lastPos) + 1];
         bool sigueCaracter = (delimitadoresUrl.find(siguienteAHtpp) && siguienteAHtpp != '\0');
 
-        // Si después de los dos puntos no le sigue ningun caracter, no se considera URL
+        // Si despuï¿½s de los dos puntos no le sigue ningun caracter, no se considera URL
         if(!sigueCaracter) return false;
 
         pos = str.find_first_of(delimitadoresUrl, lastPos);
@@ -201,7 +199,7 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
     {         
         string siguienteAacumular = str.substr(lastPos, pos-lastPos);
 
-        // Miramos si el número empieza por punto o coma para añadirle el 0 del principio
+        // Miramos si el nï¿½mero empieza por punto o coma para aï¿½adirle el 0 del principio
         if (puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos && lastPos == almacenaPrimerLastPos && str[almacenaPrimerLastPos-1] != '\0')
         {
             string ceroComa = "0";
@@ -209,7 +207,7 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
             tokenAcumulador += ceroComa;
         }
 
-        // Miramos si el substring de después del punto tiene algun caracter distinto a un número
+        // Miramos si el substring de despuï¿½s del punto tiene algun caracter distinto a un nï¿½mero
         if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
         { 
             lastPos = almacenaPrimerLastPos;
@@ -278,7 +276,7 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
         string ceroComa = "0", siguienteAacumular = str.substr(lastPos, pos-lastPos);
         ceroComa += str[almacenaPrimerLastPos-1];
 
-        // Miramos si el substring de después del punto tiene algun caracter distinto a un número
+        // Miramos si el substring de despuï¿½s del punto tiene algun caracter distinto a un nï¿½mero
         if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
         { 
             lastPos = almacenaPrimerLastPos;
