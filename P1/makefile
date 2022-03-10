@@ -20,4 +20,4 @@ clean:
 	rm -f $(OBJ) 
 
 debug: src/main.cpp $(OBJ)
-	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) src/main.cpp $(OBJ) -o src/main
+	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) main.cpp $(OBJ) -o main

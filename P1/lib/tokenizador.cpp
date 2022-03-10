@@ -58,7 +58,7 @@ Tokenizador::Tokenizador(const Tokenizador& copia)
 // Constructor por defecto de la clase
 Tokenizador::Tokenizador()
 {
-    this->delimiters = ",;:.-/+*\\ '\"{}[]()<>�!�?&#=\t\n\r@";
+    this->delimiters = ",;:.-/+*\\ '\"{}[]()<>?!??&#=\t\n\r@";
     this->casosEspeciales = true;
     this->pasarAminuscSinAcentos = false;
 }
@@ -80,7 +80,7 @@ Tokenizador& Tokenizador::operator=(const Tokenizador& tokenizadorParam)
     return *this;
 }
 
-// Funcion que devuelve el car�cter pasado a minuscula
+// Funcion que devuelve el car?cter pasado a minuscula
 char normalizarCaracter(char car)
 {
     char aux;
@@ -167,7 +167,7 @@ string Tokenizador::quitarEspeciales(const string &especiales, const string &del
     return aux;
 }
 
-// Funci�n para sacar url
+// Funci?n para sacar url
 bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresUrl, const string &delimiters) const
 {
     if (str.find("http:", lastPos) == lastPos || str.find("https:", lastPos) == lastPos || str.find("ftp:", lastPos) == lastPos)
@@ -175,7 +175,7 @@ bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_
         char siguienteAHtpp = str[str.find_first_of(":", lastPos) + 1];
         bool sigueCaracter = (delimitadoresUrl.find(siguienteAHtpp) && siguienteAHtpp != '\0');
 
-        // Si despu�s de los dos puntos no le sigue ningun caracter, no se considera URL
+        // Si despu?s de los dos puntos no le sigue ningun caracter, no se considera URL
         if(!sigueCaracter) return false;
 
         pos = str.find_first_of(delimitadoresUrl, lastPos);
@@ -199,7 +199,7 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
     {         
         string siguienteAacumular = str.substr(lastPos, pos-lastPos);
 
-        // Miramos si el n�mero empieza por punto o coma para a�adirle el 0 del principio
+        // Miramos si el n?mero empieza por punto o coma para a?adirle el 0 del principio
         if (puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos && lastPos == almacenaPrimerLastPos && str[almacenaPrimerLastPos-1] != '\0')
         {
             string ceroComa = "0";
@@ -207,7 +207,7 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
             tokenAcumulador += ceroComa;
         }
 
-        // Miramos si el substring de despu�s del punto tiene algun caracter distinto a un n�mero
+        // Miramos si el substring de despu?s del punto tiene algun caracter distinto a un n?mero
         if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
         { 
             lastPos = almacenaPrimerLastPos;
@@ -276,7 +276,7 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
         string ceroComa = "0", siguienteAacumular = str.substr(lastPos, pos-lastPos);
         ceroComa += str[almacenaPrimerLastPos-1];
 
-        // Miramos si el substring de despu�s del punto tiene algun caracter distinto a un n�mero
+        // Miramos si el substring de despu?s del punto tiene algun caracter distinto a un n?mero
         if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
         { 
             lastPos = almacenaPrimerLastPos;
@@ -407,19 +407,18 @@ bool Tokenizador::Tokenizar(const string& NomFichEntr, const string& NomFichSal)
     }
     else
     {
-        while(!entry.eof())
+        while(getline(entry, cadena))
         {
-            cadena="";
-            getline(entry, cadena);
             if(cadena.length()!=0)
             {
                 Tokenizar(cadena, tokens);
             }
+            cadena="";
         }
     }
 
     entry.close();
-    exit.open(NomFichSal.c_str());
+    exit.open((NomFichSal+".tk").c_str());
     list<string>::iterator itS;
     
     for(itS= tokens.begin();itS!= tokens.end();itS++)
@@ -432,7 +431,44 @@ bool Tokenizador::Tokenizar(const string& NomFichEntr, const string& NomFichSal)
     return true;
 } 
 
-/*bool Tokenizador::TokenizarDirectorio (const string& dirAIndexar) const {
+// Funcion tokenizar un fichero y ponerle el mismo nombre al de salida que entrada
+bool Tokenizador::Tokenizar(const string &i) const
+{
+    return Tokenizar(i, i);
+}
+
+// Funci?n para tokenizar una lista de ficheros
+bool Tokenizador::TokenizarListaFicheros(const string &i) const
+{
+    ifstream entry;
+    string cadena;
+    list<string> tokens;
+    bool devolver = true;
+
+    entry.open(i.c_str());
+
+    if(!entry) {
+        cerr << "ERROR: No existe el archivo: " << i << endl;
+        return false;
+    }
+    else
+    {
+        while(getline(entry, cadena))
+        {
+            if(cadena.length()!=0)
+            {
+                devolver = devolver && Tokenizar(cadena, cadena);
+            }
+            cadena = ";";
+        }
+    }
+    entry.close();
+
+    return devolver;
+}
+
+// Funci?n para tokenizar un directorio
+bool Tokenizador::TokenizarDirectorio (const string& dirAIndexar) const {
     struct stat dir;
     // Compruebo la existencia del directorio
     int err=stat(dirAIndexar.c_str(), &dir);
@@ -444,7 +480,7 @@ bool Tokenizador::Tokenizar(const string& NomFichEntr, const string& NomFichSal)
         system(cmd.c_str());
         return TokenizarListaFicheros(".lista_fich");
     }
-}*/
+}
 
 // Cambia delimiters por nuevoDelimiters
 void Tokenizador::DelimitadoresPalabra(const string& nuevoDelimiters)
