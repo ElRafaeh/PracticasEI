@@ -130,10 +130,11 @@ char normalizarCaracter(char car)
 string Tokenizador::convertirSinMayusSinAcen(string str) const
 {
     string minusculas;
+    string::iterator it;
 
-    for(auto car : str)
+    for(it = str.begin(); it != str.end(); it++)
     {
-        islower(car) ? minusculas += car : minusculas += tolower(normalizarCaracter(car));               
+        minusculas += tolower(normalizarCaracter(*it));               
     }
 
     return minusculas;
@@ -195,7 +196,7 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
     string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]), posAux= str.find_first_of(delimitersDecimal, lastPos), almacenaPrimerLastPos = lastPos, almacenaPrimerPos = pos;;
     string puntoComa = ".,", tokenAcumulador, numeros = "0123456789";
 
-    while((puntoComa.find(str[pos]) != string::npos || puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos) && (str[pos+1] != '\0') && (posPosterior == string::npos) && (str[pos-1] != '\0') && (posAnterior == string::npos))
+    while((puntoComa.find(str[pos]) != string::npos || puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos) && (posPosterior == string::npos) && (posAnterior == string::npos) && (str[pos+1] != '\0') && (str[pos-1] != '\0'))
     {         
         string siguienteAacumular = str.substr(lastPos, pos-lastPos);
 
@@ -299,7 +300,7 @@ bool Tokenizador::casoEmail(list<string> &tokens, const string &str, string::siz
     string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]);
     bool condicionMenosDeUnDelimitador = (str[str.find_first_of(delimitadoresEmail, pos+1)] == ' ') || (str[str.find_first_of(delimitadoresEmail, pos+1)] == '\n') || (str[str.find_first_of(delimitadoresEmail, pos+1)] == '\0');
 
-    if((str[pos] == '@') && (str[pos+1] != '\0') && (posPosterior == string::npos) && (posAnterior == string::npos) && condicionMenosDeUnDelimitador)  
+    if((str[pos] == '@') && (posPosterior == string::npos) && (posAnterior == string::npos) && (str[pos+1] != '\0') && condicionMenosDeUnDelimitador)  
     {   
         string::size_type posAux = str.find_first_of(delimitadoresEmail, pos+1), siguienteDelim = str.find_first_of(delimiters, pos+1);
 
@@ -325,7 +326,7 @@ bool Tokenizador::casoAcronimoYMulti(const char car, list<string> &tokens, const
     string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]), posAux= str.find_first_of(delimitadoresAcronimOMulti, lastPos);
     string tokenAcumulador;
 
-    while((str[pos] == car) && (str[pos+1] != '\0') && (posPosterior == string::npos) && (str[pos-1] != '\0') && (posAnterior == string::npos))
+    while((str[pos] == car) && (posPosterior == string::npos) && (posAnterior == string::npos) && (str[pos+1] != '\0') && (str[pos-1] != '\0'))
     {         
         tokenAcumulador += str.substr(lastPos, pos-lastPos) + str[pos];
 
@@ -398,8 +399,9 @@ bool Tokenizador::Tokenizar(const string& NomFichEntr, const string& NomFichSal)
     ofstream exit;
     string cadena;
     list<string> tokens;
-
+    string aux = "";
     entry.open(NomFichEntr.c_str());
+    
     
     if(!entry) {
         cerr << "ERROR: No existe el archivo: " << NomFichEntr << endl;
@@ -409,32 +411,36 @@ bool Tokenizador::Tokenizar(const string& NomFichEntr, const string& NomFichSal)
     {
         while(getline(entry, cadena))
         {
+            list<string>::iterator itS;
+
             if(cadena.length()!=0)
             {
                 Tokenizar(cadena, tokens);
             }
+
+            for(itS= tokens.begin();itS!= tokens.end();itS++)
+            {
+                aux += (*itS) + "\n";
+            }
+
             cadena="";
         }
     }
 
-    entry.close();
-    exit.open((NomFichSal+".tk").c_str());
-    list<string>::iterator itS;
-    
-    for(itS= tokens.begin();itS!= tokens.end();itS++)
+    entry.close(); 
+    exit.open((NomFichSal).c_str());
+    if (exit)
     {
-        exit << (*itS) << endl;
+        exit << aux;
+        exit.close();
     }
-
-    exit.close();
-
     return true;
 } 
 
 // Funcion tokenizar un fichero y ponerle el mismo nombre al de salida que entrada
 bool Tokenizador::Tokenizar(const string &i) const
 {
-    return Tokenizar(i, i);
+    return Tokenizar(i, i+".tk");
 }
 
 // Funci?n para tokenizar una lista de ficheros
@@ -455,11 +461,11 @@ bool Tokenizador::TokenizarListaFicheros(const string &i) const
     {
         while(getline(entry, cadena))
         {
-            if(cadena.length()!=0)
+            if(!Tokenizar(cadena))
             {
-                devolver = devolver && Tokenizar(cadena, cadena);
+                devolver = false;
             }
-            cadena = ";";
+            cadena = "";
         }
     }
     entry.close();
