@@ -25,10 +25,6 @@ class Tokenizador
 			// Pone delimiters=""
 		Tokenizador& operator= (const Tokenizador&);
 			// Operador igualdad
-		void TokenizarSinCasosEspeciales(const string& str, list<string>& tokens) const; 
-			//Funci?n para tokenizar sin casos especiales activados
-		void TokenizarCasosEspeciales(const string& str, list<string>& tokens, const string &delimiters) const; 
-			//Funci?n para tokenizar con casos especiales activados
 		void Tokenizar (string str, list<string>& tokens) const;
 			// Tokeniza str devolviendo el resultado en tokens. La lista tokens se
 			// vaciar? antes de almacenar el resultado de la tokenizaci?n.
@@ -67,7 +63,12 @@ class Tokenizador
 			// correcci?n de la pr?ctica se utilizar? el formato actual (ISO-8859).
 		bool PasarAminuscSinAcentos ();
 			// Devuelve el contenido de la variable privada ?pasarAminuscSinAcentos? 
+			
 	private:
+		void TokenizarSinCasosEspeciales(const string& str, list<string>& tokens) const; 
+			//Funci?n para tokenizar sin casos especiales activados
+		void TokenizarCasosEspeciales(const string& str, list<string>& tokens, const string &delimiters) const; 
+			//Funci?n para tokenizar con casos especiales activados
 		string delimiters; 
 			// Delimitadores de t?rminos. Aunque se modifique la forma de almacenamiento interna para mejorar la eficiencia, este
 			// campo debe permanecer para indicar el orden en que se introdujeron los delimitadores
@@ -76,7 +77,7 @@ class Tokenizador
 			// tokenizador vista en clase?
 		bool pasarAminuscSinAcentos;
 			// Si true pasar? el token a min?sculas y quitar? acentos, antes de realizar la tokenizaci?n
-		string eliminaDuplicados(const string &conDuplicados) const; 
+		string eliminaDuplicados(string conDuplicados) const; 
 			// Funcion auxiliar que elimina duplicados de un string
 		void copia(const Tokenizador&); 
 			// Funcion auxiliar para copiar el tokenizador pasado
@@ -92,7 +93,6 @@ class Tokenizador
 			// Funcion que verifica si se trata de un caso de acronimo o multipalabra y almacena el token
 		string quitarEspeciales(const string &especiales, const string &delimiters) const;
 			// Funcion que devuelve los delimitadores habiendole quitados los delimitadores pasador por argumento
-
 };
 
 

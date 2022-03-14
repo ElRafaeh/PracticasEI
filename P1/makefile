@@ -19,5 +19,5 @@ $(LIBDIR)/%.o : $(LIBDIR)/%.cpp $(INCLUDEDIR)/%.h
 clean:
 	rm -f $(OBJ) 
 
-debug: src/main.cpp $(OBJ)
+debug: main.cpp $(OBJ)
 	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) main.cpp $(OBJ) -o main

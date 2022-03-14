@@ -15,16 +15,17 @@ ostream& operator<<(ostream& os, const Tokenizador& tokenizador)
 }
 
 // Funcion auxiliar que elimina duplicados de un string
-string Tokenizador::eliminaDuplicados(const string &aEliminar) const
+string Tokenizador::eliminaDuplicados(string aEliminar) const
 {
     unordered_map<int, char> stringHash;
+    string::iterator it;
     string aux = aEliminar;
     
-    for(auto car: aEliminar)
+    for(it = aEliminar.begin(); it != aEliminar.end(); it++)
     {
-        if(!(stringHash.insert(make_pair(car, car)).second))
+        if(!(stringHash.insert(make_pair(*it, *it)).second))
         {
-            aux.erase(aux.begin() + aux.find_last_of(car));
+            aux.erase(aux.begin() + aux.find_last_of(*it));
         }
     }
     
@@ -87,38 +88,23 @@ char normalizarCaracter(char car)
 
     switch (car)
     {   
-        case '\300'...'\305':
+        case '\300'...'\305': case '\340'...'\345':
             return 'a';
-        case '\307':
-            return 'c';
-        case '\310'...'\313':
+            break;
+        case '\310'...'\313': case '\350'...'\353':
             return 'e';
-        case '\314'...'\317':
+            break;
+        case '\314'...'\317': case '\354'...'\357':
             return 'i';
+            break;
         case '\321':
             return '\361';
-        case '\322'...'\326':
+        case '\322'...'\326': case '\362'...'\366':
             return 'o';
-        case '\331'...'\334':
+            break;
+        case '\331'...'\334': case '\371'...'\374':
             return 'u';
-        case '\335':
-            return 'y';    
-        case '\340'...'\345':
-            return 'a';
-        case '\347':
-            return 'c';
-        case '\350'...'\353':
-            return 'e';
-        case '\354'...'\357':
-            return 'i';
-        case '\362'...'\366':
-            return 'o';
-        case '\371'...'\374':
-            return 'u';
-        case '\375':
-            return 'y';
-        case '\377':
-            return 'y';
+            break;
         default:
             return car;
             break;
@@ -208,7 +194,7 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
             tokenAcumulador += ceroComa;
         }
 
-        // Miramos si el substring de despu?s del punto tiene algun caracter distinto a un n?mero
+        // Miramos si el substring de despues del punto tiene algun caracter distinto a un n?mero
         if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
         { 
             lastPos = almacenaPrimerLastPos;
@@ -375,17 +361,21 @@ void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &toke
                         }
                     }
                 }
-            }  
+            }
         }
     }
 }
 
-// Versi?n del tokenizador vista en CLASE
+// Funcion tokenizar que devuelve una lista de tokens
 void Tokenizador::Tokenizar(string str, list<string>& tokens) const
 {
+    // Borramos la lista de tokens
     tokens.clear();
+
+    // Hacemos una copia de la variable privada delimiters y le metemos los delimitadors espacio y salto de línea
     string delimiters = eliminaDuplicados(this->delimiters + " \n");
 
+    // Comprobamos si la variable booleana para pasar a minuscula y sin acentos esta activa o no
     if(pasarAminuscSinAcentos) { str = convertirSinMayusSinAcen(str); }
 
     // Comprueba si queremos tokenizar con los casos especiales o no 
@@ -400,9 +390,8 @@ bool Tokenizador::Tokenizar(const string& NomFichEntr, const string& NomFichSal)
     string cadena;
     list<string> tokens;
     string aux = "";
+    
     entry.open(NomFichEntr.c_str());
-    
-    
     if(!entry) {
         cerr << "ERROR: No existe el archivo: " << NomFichEntr << endl;
         return false;
@@ -443,7 +432,7 @@ bool Tokenizador::Tokenizar(const string &i) const
     return Tokenizar(i, i+".tk");
 }
 
-// Funci?n para tokenizar una lista de ficheros
+// Funcion para tokenizar una lista de ficheros
 bool Tokenizador::TokenizarListaFicheros(const string &i) const
 {
     ifstream entry;
@@ -473,7 +462,7 @@ bool Tokenizador::TokenizarListaFicheros(const string &i) const
     return devolver;
 }
 
-// Funci?n para tokenizar un directorio
+// Funcion para tokenizar un directorio
 bool Tokenizador::TokenizarDirectorio (const string& dirAIndexar) const {
     struct stat dir;
     // Compruebo la existencia del directorio
