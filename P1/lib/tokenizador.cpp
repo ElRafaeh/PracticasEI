@@ -81,37 +81,6 @@ Tokenizador& Tokenizador::operator=(const Tokenizador& tokenizadorParam)
     return *this;
 }
 
-// Funcion que devuelve el car?cter pasado a minuscula
-char normalizarCaracter(char car)
-{
-    char aux;
-
-    switch (car)
-    {   
-        case '\300'...'\305': case '\340'...'\345':
-            return 'a';
-            break;
-        case '\310'...'\313': case '\350'...'\353':
-            return 'e';
-            break;
-        case '\314'...'\317': case '\354'...'\357':
-            return 'i';
-            break;
-        case '\321':
-            return '\361';
-        case '\322'...'\326': case '\362'...'\366':
-            return 'o';
-            break;
-        case '\331'...'\334': case '\371'...'\374':
-            return 'u';
-            break;
-        default:
-            return car;
-            break;
-    }
-}
-
-
 // Funcion auxiliar que pasa un string pasado a otro sin minusculas y sin acentos
 string Tokenizador::convertirSinMayusSinAcen(string str) const
 {
@@ -120,7 +89,30 @@ string Tokenizador::convertirSinMayusSinAcen(string str) const
 
     for(it = str.begin(); it != str.end(); it++)
     {
-        minusculas += tolower(normalizarCaracter(*it));               
+        switch (*it)
+        {   
+            case '\300'...'\305': case '\340'...'\345':
+                minusculas += 'a';
+                break;
+            case '\310'...'\313': case '\350'...'\353':
+                minusculas += 'e';
+                break;
+            case '\314'...'\317': case '\354'...'\357':
+                minusculas += 'i';
+                break;
+            case '\321':
+                minusculas += '\361';
+                break;
+            case '\322'...'\326': case '\362'...'\366':
+                minusculas += 'o';
+                break;
+            case '\331'...'\334': case '\371'...'\374':
+                minusculas += 'u';
+                break;
+            default:
+                minusculas += tolower(*it);
+                break;
+        }                 
     }
 
     return minusculas;
@@ -154,15 +146,16 @@ string Tokenizador::quitarEspeciales(const string &especiales, const string &del
     return aux;
 }
 
-// Funci?n para sacar url
-bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresUrl, const string &delimiters) const
+// Funcion para sacar url
+bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresUrl,
+const string &delimiters) const
 {
     if (str.find("http:", lastPos) == lastPos || str.find("https:", lastPos) == lastPos || str.find("ftp:", lastPos) == lastPos)
     {
         char siguienteAHtpp = str[str.find_first_of(":", lastPos) + 1];
         bool sigueCaracter = (delimitadoresUrl.find(siguienteAHtpp) && siguienteAHtpp != '\0');
 
-        // Si despu?s de los dos puntos no le sigue ningun caracter, no se considera URL
+        // Si después de los dos puntos no le sigue ningun caracter, no se considera URL
         if(!sigueCaracter) return false;
 
         pos = str.find_first_of(delimitadoresUrl, lastPos);
@@ -177,12 +170,15 @@ bool Tokenizador::casoUrl(list<string> &tokens, const string &str, string::size_
 }
 
 // Funcion para verificar si es decimal o no y guardar el token correspondiente
-bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitersDecimal, const string &delimiters) const
+bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresDecimal, const string &delimiters) const
 {
-    string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]), posAux= str.find_first_of(delimitersDecimal, lastPos), almacenaPrimerLastPos = lastPos, almacenaPrimerPos = pos;;
     string puntoComa = ".,", tokenAcumulador, numeros = "0123456789";
+    // Variables a usar en el método
+    string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]), 
+    posAux= str.find_first_of(delimitadoresDecimal, lastPos), almacenaPrimerLastPos = lastPos, almacenaPrimerPos = pos;
 
-    while((puntoComa.find(str[pos]) != string::npos || puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos) && (posPosterior == string::npos) && (posAnterior == string::npos) && (str[pos+1] != '\0') && (str[pos-1] != '\0'))
+    while((puntoComa.find(str[pos]) != string::npos || puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos) 
+    && (posPosterior == string::npos) && (posAnterior == string::npos) && (str[pos+1] != '\0') && (str[pos-1] != '\0'))
     {         
         string siguienteAacumular = str.substr(lastPos, pos-lastPos);
 
@@ -202,6 +198,7 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
             return false;
         }
 
+        // Si el delimitador siguiente es un punto o una coma, guardamos el caracter. Si no no se guardará y almacenaremos el token
         if(str[pos] == '.' || str[pos] == ',')
         {
             tokenAcumulador += siguienteAacumular + str[pos];
@@ -215,20 +212,26 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
             return true;
         }
 
+        // Se busca la siguiente posicion de un elemento no delimitador y del siguiente delimitador
         lastPos = str.find_first_not_of(delimiters, pos);
         pos = str.find_first_of(delimiters, lastPos);
 
+        // Se guarda si el siguiente o el anterior elemento al delimitador es otro delimitador
         posAnterior = delimiters.find(str[pos-1]);
         posPosterior = delimiters.find(str[pos+1]);
 
+        // Si la posicion del delimitador es igual al ultimo delimitador o una de las dos posiciones almacenadas anteriormente es un delimitador 
+        // se procederá con el guardado del token
         if (pos == posAux || posPosterior != string::npos || posAnterior != string::npos || str[pos+1] == '\0')
         {
             siguienteAacumular = str.substr(lastPos, pos-lastPos);
             string caracteresFinales = "%$", caracterFinal;
             bool almacenaCaracter = false;
 
+            // Si el último subsstring a almacenar no son todo números se devuelve false, si no almacenamos
             if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
             { 
+                // Si se encuentran los simbolos & o % se almacena en otro token a parte, se pondra el valor booleano almacenaCaracter a true
                 if (siguienteAacumular.find_first_of(caracteresFinales) != siguienteAacumular.size()-1)
                 {
                     lastPos = almacenaPrimerLastPos;
@@ -243,9 +246,11 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
                 }
             }
 
+            // Guardamos el token
             tokenAcumulador += siguienteAacumular;
             tokens.push_back(tokenAcumulador);
 
+            // Guardamos el caracter final si es & o %
             if(almacenaCaracter)
             {
                 tokens.push_back(caracterFinal);
@@ -258,12 +263,13 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
         }
     }
 
+    // Puede ser que se encuentre el primer elemento como un ., y el anterior como delimitador
     if(puntoComa.find(str[almacenaPrimerLastPos-1]) != string::npos)
     {
         string ceroComa = "0", siguienteAacumular = str.substr(lastPos, pos-lastPos);
         ceroComa += str[almacenaPrimerLastPos-1];
 
-        // Miramos si el substring de despu?s del punto tiene algun caracter distinto a un n?mero
+        // Miramos si el substring de despues del punto tiene algun caracter distinto a un nemero
         if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
         { 
             lastPos = almacenaPrimerLastPos;
@@ -307,9 +313,11 @@ bool Tokenizador::casoEmail(list<string> &tokens, const string &str, string::siz
 }
 
 // Funcion para verificar si es acronimo o multipalabra o no y guardar el token correspondiente
-bool Tokenizador::casoAcronimoYMulti(const char car, list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresAcronimOMulti, const string &delimiters) const
+bool Tokenizador::casoAcronimoYMulti(const char &car, list<string> &tokens, const string &str, string::size_type &pos, 
+string::size_type &lastPos, const string &delimitadoresAcronimOMulti, const string &delimiters) const
 {
-    string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]), posAux= str.find_first_of(delimitadoresAcronimOMulti, lastPos);
+    string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]), 
+    posAux= str.find_first_of(delimitadoresAcronimOMulti, lastPos);
     string tokenAcumulador;
 
     while((str[pos] == car) && (posPosterior == string::npos) && (posAnterior == string::npos) && (str[pos+1] != '\0') && (str[pos-1] != '\0'))
@@ -341,7 +349,9 @@ void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &toke
 {
     string::size_type lastPos = str.find_first_not_of(delimiters,0);
     string::size_type pos = str.find_first_of(delimiters,lastPos);
-    string delimitadoresUrl = quitarEspeciales("_:/.?&-=#@", delimiters), delimitadoresDecimal = quitarEspeciales(".,%$", delimiters), delimitadoresEmail = quitarEspeciales(".-_", delimiters), delimitadoresAcronim = quitarEspeciales(".", delimiters), delimitadoresMulti = quitarEspeciales("-", delimiters);
+    string delimitadoresUrl = quitarEspeciales("_:/.?&-=#@", delimiters), delimitadoresDecimal = quitarEspeciales(".,%$", delimiters), 
+    delimitadoresEmail = quitarEspeciales(".-_", delimiters), delimitadoresAcronim = quitarEspeciales(".", delimiters), 
+    delimitadoresMulti = quitarEspeciales("-", delimiters);
     
     while(string::npos != pos || string::npos != lastPos)
     {
