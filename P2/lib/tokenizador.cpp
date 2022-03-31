@@ -40,6 +40,35 @@ void Tokenizador::copia(const Tokenizador& copia)
     this->pasarAminuscSinAcentos = copia.pasarAminuscSinAcentos;
 }
 
+void Tokenizador::rellenarCaracteresISO()
+{
+    // Rellenamos el array de caracteresISO
+    for(char i = 0; i < 256; i++)
+    {
+        switch (i)
+        {   
+            case '\300'...'\305': case '\340'...'\345':
+                this->caracteresIso[i] += 'a';
+                break;
+            case '\310'...'\313': case '\350'...'\353':
+                this->caracteresIso[i] += 'e';
+                break;
+            case '\314'...'\317': case '\354'...'\357':
+                this->caracteresIso[i] += 'i';
+                break;
+            case '\321':
+                this->caracteresIso[i] += '\361';
+                break;
+            case '\322'...'\326': case '\362'...'\366':
+                this->caracteresIso[i] += 'o';
+                break;
+            case '\331'...'\334': case '\371'...'\374':
+                this->caracteresIso[i] += 'u';
+                break;
+        }                 
+    }
+}
+
 // Constructor
 Tokenizador::Tokenizador(const string& delimitadoresPalabra, const bool& kcasosEspeciales, const bool& minuscSinAcentos)
 {
@@ -47,6 +76,7 @@ Tokenizador::Tokenizador(const string& delimitadoresPalabra, const bool& kcasosE
     this->casosEspeciales = kcasosEspeciales;
     this->pasarAminuscSinAcentos = minuscSinAcentos;
     this->delimiters = eliminaDuplicados(this->delimiters);
+    rellenarCaracteresISO();
 }
 
 // Constructor de copia
@@ -54,6 +84,7 @@ Tokenizador::Tokenizador(const Tokenizador& copia)
 {
     this->copia(copia);
     this->delimiters = eliminaDuplicados(this->delimiters);
+    rellenarCaracteresISO();
 }
 
 // Constructor por defecto de la clase
@@ -62,12 +93,14 @@ Tokenizador::Tokenizador()
     this->delimiters = ",;:.-/+*\\ '\"{}[]()<>?!??&#=\t\n\r@";
     this->casosEspeciales = true;
     this->pasarAminuscSinAcentos = false;
+    rellenarCaracteresISO();
 }
 
 // Destructor de la clase
 Tokenizador::~Tokenizador()
 {
     delimiters.clear();
+    delete this->caracteresIso;
 }
 
 // Operador de asignacion
@@ -89,30 +122,7 @@ string Tokenizador::convertirSinMayusSinAcen(string str) const
 
     for(it = str.begin(); it != str.end(); it++)
     {
-        switch (*it)
-        {   
-            case '\300'...'\305': case '\340'...'\345':
-                minusculas += 'a';
-                break;
-            case '\310'...'\313': case '\350'...'\353':
-                minusculas += 'e';
-                break;
-            case '\314'...'\317': case '\354'...'\357':
-                minusculas += 'i';
-                break;
-            case '\321':
-                minusculas += '\361';
-                break;
-            case '\322'...'\326': case '\362'...'\366':
-                minusculas += 'o';
-                break;
-            case '\331'...'\334': case '\371'...'\374':
-                minusculas += 'u';
-                break;
-            default:
-                minusculas += tolower(*it);
-                break;
-        }                 
+        minusculas += this->caracteresIso[*it];               
     }
 
     return minusculas;
@@ -155,7 +165,7 @@ const string &delimiters) const
         char siguienteAHtpp = str[str.find_first_of(":", lastPos) + 1];
         bool sigueCaracter = (delimitadoresUrl.find(siguienteAHtpp) && siguienteAHtpp != '\0');
 
-        // Si después de los dos puntos no le sigue ningun caracter, no se considera URL
+        // Si despuï¿½s de los dos puntos no le sigue ningun caracter, no se considera URL
         if(!sigueCaracter) return false;
 
         pos = str.find_first_of(delimitadoresUrl, lastPos);
@@ -173,7 +183,7 @@ const string &delimiters) const
 bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresDecimal, const string &delimiters) const
 {
     string puntoComa = ".,", tokenAcumulador, numeros = "0123456789";
-    // Variables a usar en el método
+    // Variables a usar en el mï¿½todo
     string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]), 
     posAux= str.find_first_of(delimitadoresDecimal, lastPos), almacenaPrimerLastPos = lastPos, almacenaPrimerPos = pos;
 
@@ -198,7 +208,7 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
             return false;
         }
 
-        // Si el delimitador siguiente es un punto o una coma, guardamos el caracter. Si no no se guardará y almacenaremos el token
+        // Si el delimitador siguiente es un punto o una coma, guardamos el caracter. Si no no se guardarï¿½ y almacenaremos el token
         if(str[pos] == '.' || str[pos] == ',')
         {
             tokenAcumulador += siguienteAacumular + str[pos];
@@ -221,14 +231,14 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
         posPosterior = delimiters.find(str[pos+1]);
 
         // Si la posicion del delimitador es igual al ultimo delimitador o una de las dos posiciones almacenadas anteriormente es un delimitador 
-        // se procederá con el guardado del token
+        // se procederï¿½ con el guardado del token
         if (pos == posAux || posPosterior != string::npos || posAnterior != string::npos || str[pos+1] == '\0')
         {
             siguienteAacumular = str.substr(lastPos, pos-lastPos);
             string caracteresFinales = "%$", caracterFinal;
             bool almacenaCaracter = false;
 
-            // Si el último subsstring a almacenar no son todo números se devuelve false, si no almacenamos
+            // Si el ï¿½ltimo subsstring a almacenar no son todo nï¿½meros se devuelve false, si no almacenamos
             if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
             { 
                 // Si se encuentran los simbolos & o % se almacena en otro token a parte, se pondra el valor booleano almacenaCaracter a true
@@ -376,13 +386,14 @@ void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &toke
     }
 }
 
+
 // Funcion tokenizar que devuelve una lista de tokens
 void Tokenizador::Tokenizar(string str, list<string>& tokens) const
 {
     // Borramos la lista de tokens
     tokens.clear();
 
-    // Hacemos una copia de la variable privada delimiters y le metemos los delimitadors espacio y salto de línea
+    // Hacemos una copia de la variable privada delimiters y le metemos los delimitadors espacio y salto de lï¿½nea
     string delimiters = eliminaDuplicados(this->delimiters + " \n");
 
     // Comprobamos si la variable booleana para pasar a minuscula y sin acentos esta activa o no

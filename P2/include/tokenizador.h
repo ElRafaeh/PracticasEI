@@ -93,6 +93,9 @@ class Tokenizador
 			// Funcion que verifica si se trata de un caso de acronimo o multipalabra y almacena el token
 		string quitarEspeciales(const string &especiales, const string &delimiters) const;
 			// Funcion que devuelve los delimitadores habiendole quitados los delimitadores pasador por argumento
+		char caracteresIso[256];
+			// Array con todos los caracteres
+		void rellenarCaracteresISO();
 };
 
 

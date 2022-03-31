@@ -1,0 +1,149 @@
+
+*** These modified files were found in JOE when it aborted on Mon Jan 10 13:25:41 2022
+*** JOE was aborted because the terminal closed
+
+*** File 'acentos01.cpp'
+#include <iostream> 
+#include <string>
+#include <list> 
+#include "tokenizador.h"
+
+using namespace std;
+
+void imprimirListaSTL(const list<string>& cadena)
+{
+        list<string>::const_iterator itCadena;
+        for(itCadena=cadena.begin();itCadena!=cadena.end();itCadena++)
+        {
+                cout << (*itCadena) << ", ";
+        }
+        cout << endl;
+}
+
+int
+main(void)
+{
+		bool kCasosEspeciales = true, kpasarAminusculas = true;
+
+		list<string> lt1, lt2, lt3;
+
+		Tokenizador a("[]# ", kCasosEspeciales, kpasarAminusculas);
+
+
+		a.Tokenizar("ÿÿÿÿÿ ÿÿÿÿÿ MS#DOS OS_2 [high low]", lt1);
+		imprimirListaSTL(lt1);
+
+		a.AnyadirDelimitadoresPalabra("_ []");
+		a.Tokenizar("MS#DOS OS_2 [high low]", lt2);
+		imprimirListaSTL(lt2);
+
+		a.DelimitadoresPalabra("_");
+		a.Tokenizar("MS#DOS OS_2 [high low]", lt3);
+		imprimirListaSTL(lt3);
+
+		a.DelimitadoresPalabra(" _");
+		a.Tokenizar("MS#DOS 10 España Éspáñé OS_2 [high low]", lt3);
+		imprimirListaSTL(lt3);
+
+		a.Tokenizar("áéíóú ÁÉÍÓÚ Ññ ", lt3);
+		imprimirListaSTL(lt3);
+
+		a.PasarAminuscSinAcentos(false);
+		a.DelimitadoresPalabra(" _");
+		a.Tokenizar("MS#DOS 10 España Éspáñé OS_2 [high low]", lt3);
+		imprimirListaSTL(lt3);
+		
+}
+
+*** File '(Unnamed)'
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ *b 
+[1]
+de su nivel
+
+*** File '(Unnamed)'
+operator[]
+OKs
+48758104
+mata
+-f
+yo
+conseguimo
+pal
+HijosAVL 
+public
+
+*** File '(Unnamed)'
+resumen_tiempos_medios_buscador_423preg.txt
+resumenBD_correccion
+resumen_tiempos_medios_indexador.txt
+resumen_espacio_medios_indexacion.txt
+resumen_espacio_medios_indexacion.txt
+resumenBD_correccion
+resumen_tiempos_medios_tokenizador.txt
+resumen_espacios_medios_tokenizador.txt
+resumenBD_correccion
+../prueba/tok_acentos_en01.cpp
+acentos01.cpp
+acentos01.cpp.sal
+
+*** File '* Startup Log *'
+Processing '/etc/joe/joerc'...
+Processing '/etc/joe/ftyperc'...
+Finished processing /etc/joe/ftyperc
+Finished processing /etc/joe/joerc
+
+*** These modified files were found in JOE when it aborted on Thu Feb 10 10:50:10 2022
+*** JOE was aborted because the terminal closed
+
+*** File '(Unnamed)'
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ *b 
+[1]
+de su nivel
+
+*** File '(Unnamed)'
+operator[]
+OKs
+48758104
+mata
+-f
+yo
+conseguimo
+pal
+HijosAVL 
+public
+
+*** File '(Unnamed)'
+numero08.cpp.sal
+numero07.cpp
+numero07.cpp~
+numero07.cpp.sal
+numero07.cpp.sal~
+tad02.cpp
+tad02.cpp.sal
+tad.cpp
+tad.cpp
+tad.cpp
+numero05.cpp
+numero06.cpp
+numero07.cpp
+numero08.cpp
+
+*** File '* Startup Log *'
+Processing '/etc/joe/joerc'...
+Processing '/etc/joe/ftyperc'...
+Finished processing /etc/joe/ftyperc
+Finished processing /etc/joe/joerc
