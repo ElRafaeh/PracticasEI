@@ -102,18 +102,18 @@ class InfColeccionDocs {
         InfColeccionDocs ();
         ~InfColeccionDocs ();
         InfColeccionDocs & operator= (const InfColeccionDocs &);
-        // A#adir cuantos m#todos se consideren necesarios para manejar la parte privada de la clase
+        // Añadir cuantos m#todos se consideren necesarios para manejar la parte privada de la clase
     private:
         int numDocs;
-        // N# total de documentos en la colecci#n
+        // Nº total de documentos en la colección
         int numTotalPal;
-        // N# total de palabras en la colecci#n
+        // Nº total de palabras en la colección
         int numTotalPalSinParada;
-        // N# total de palabras sin stop-words en la colecci#n
+        // Nº total de palabras sin stop-words en la colección
         int numTotalPalDiferentes;
-        // N# total de palabras diferentes en la colecci#n que no sean stop-words (sin acumular la frecuencia de cada una de ellas)
+        // Nº total de palabras diferentes en la colección que no sean stop-words (sin acumular la frecuencia de cada una de ellas)
         int tamBytes;
-        // Tama#o total en bytes de la colecci#n
+        // Tamaño total en bytes de la colección
 };
 
   ////////////////////////////////////////
@@ -126,17 +126,17 @@ class InformacionTerminoPregunta {
         InformacionTerminoPregunta ();
         ~InformacionTerminoPregunta ();
         InformacionTerminoPregunta & operator=(const InformacionTerminoPregunta &);
-        // A#adir cuantos m#todos se consideren necesarios para manejar la parte privada de la clase
+        // Añadir cuantos métodos se consideren necesarios para manejar la parte privada de la clase
     private:
         int ft;
-        // Frecuencia total del t#rmino en la pregunta
+        // Frecuencia total del término en la pregunta
         list<int> posTerm;
-        // Solo se almacenar# esta informaci#n si el campo privado del indexador
+        // Solo se almacenará esta información si el campo privado del indexador
         //almacenarPosTerm == true;
-        // Lista de n#meros de palabra en los que aparece el t#rmino en la
-        // pregunta. Los n#meros de palabra comenzar#n desde cero (la primera
-        // palabra de la pregunta). Se numerar#n las palabras de parada. Estar#
-        // ordenada de menor a mayor posici#n.
+        // Lista de números de palabra en los que aparece el término en la
+        // pregunta. Los números de palabra comenzarán desde cero (la primera
+        // palabra de la pregunta). Se numerarán las palabras de parada. Estará
+        // ordenada de menor a mayor posición.
 };
 
   //////////////////////////////////

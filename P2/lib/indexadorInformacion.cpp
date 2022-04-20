@@ -160,6 +160,21 @@ InfDoc::~InfDoc()
     this->fechaModificacion.~Fecha();
 }
 
+// Operador asignación
+InfDoc& InfDoc::operator=(const InfDoc &copia)
+{
+    if(this != &copia)
+    {
+        this->idDoc = copia.idDoc;
+        this->numPal = copia.numPal;
+        this->numPalSinParada = copia.numPalSinParada;
+        this->numPalDiferentes = copia.numPalDiferentes;
+        this->tamBytes = copia.tamBytes;
+        this->fechaModificacion = copia.fechaModificacion;
+    }
+    return *this;
+}
+
 // Operador salida
 ostream& operator<<(ostream& s, const InfDoc& p) 
 {
@@ -172,6 +187,48 @@ ostream& operator<<(ostream& s, const InfDoc& p)
 //////////////////////////////////
 
 // Contructor por defecto
+InfColeccionDocs::InfColeccionDocs()
+{
+    this->numDocs = 0;
+    this->numTotalPal = 0;
+    this->numTotalPalDiferentes = 0;
+    this->numTotalPalSinParada = 0;
+    this->tamBytes = 0;
+}
+
+// Contructor copia
+InfColeccionDocs::InfColeccionDocs(const InfColeccionDocs &copia)
+{
+    this->numDocs = copia.numDocs;
+    this->numTotalPal = copia.numTotalPal;
+    this->numTotalPalDiferentes = copia.numTotalPalDiferentes;
+    this->numTotalPalSinParada = copia.numTotalPalSinParada;
+    this->tamBytes = copia.tamBytes;
+}
+
+// Destructor
+InfColeccionDocs::~InfColeccionDocs()
+{
+    this->numDocs = 0;
+    this->numTotalPal = 0;
+    this->numTotalPalDiferentes = 0;
+    this->numTotalPalSinParada = 0;
+    this->tamBytes = 0;
+}
+
+// Operador asignacion
+InfColeccionDocs& InfColeccionDocs::operator=(const InfColeccionDocs &copia)
+{
+    if(this != &copia)
+    {
+        this->numDocs = copia.numDocs;
+        this->numTotalPal = copia.numTotalPal;
+        this->numTotalPalDiferentes = copia.numTotalPalDiferentes;
+        this->numTotalPalSinParada = copia.numTotalPalSinParada;
+        this->tamBytes = copia.tamBytes;
+    }
+    return *this;
+}
 
 // Operador salida
 ostream& operator<<(ostream &s, const InfColeccionDocs &p)
@@ -185,6 +242,35 @@ ostream& operator<<(ostream &s, const InfColeccionDocs &p)
 ////////////////////////////////////////
 
 // Constructor por defecto
+InformacionTerminoPregunta::InformacionTerminoPregunta()
+{
+    this->ft = 0;
+}
+
+// Constructor de copia
+InformacionTerminoPregunta::InformacionTerminoPregunta(const InformacionTerminoPregunta &copia)
+{
+    this->ft = copia.ft;
+    this->posTerm = copia.posTerm;
+}
+
+// Destructor
+InformacionTerminoPregunta::~InformacionTerminoPregunta()
+{
+    this->ft = 0;
+    this->posTerm.clear();
+}
+
+// Operador asignacion
+InformacionTerminoPregunta& InformacionTerminoPregunta::operator=(const InformacionTerminoPregunta &copia)
+{
+    if(this != &copia)
+    {
+        this->ft = copia.ft;
+        this->posTerm = copia.posTerm;
+    }
+    return *this;
+}
 
 // Operador salida
 ostream& operator<<(ostream& s, const InformacionTerminoPregunta& p) 
@@ -199,6 +285,40 @@ ostream& operator<<(ostream& s, const InformacionTerminoPregunta& p)
 //////////////////////////////////
 
 // Contructor por defecto
+InformacionPregunta::InformacionPregunta()
+{
+    this->numTotalPal = 0;
+    this->numTotalPalDiferentes = 0;
+    this->numTotalPalSinParada = 0;
+}
+
+// Contructor copia
+InformacionPregunta::InformacionPregunta(const InformacionPregunta &copia)
+{
+    this->numTotalPal = copia.numTotalPal;
+    this->numTotalPalDiferentes = copia.numTotalPalDiferentes;
+    this->numTotalPalSinParada = copia.numTotalPalSinParada;
+}
+
+// Destructor
+InformacionPregunta::~InformacionPregunta()
+{
+    this->numTotalPal = 0;
+    this->numTotalPalDiferentes = 0;
+    this->numTotalPalSinParada = 0;
+}
+
+// Operador asignacion
+InformacionPregunta& InformacionPregunta::operator=(const InformacionPregunta &copia)
+{
+    if(this != &copia)
+    {
+        this->numTotalPal = copia.numTotalPal;
+        this->numTotalPalDiferentes = copia.numTotalPalDiferentes;
+        this->numTotalPalSinParada = copia.numTotalPalSinParada;
+    }
+    return *this;
+}
 
 // Operador salida
 ostream& operator<<(ostream &s, const InformacionPregunta &p)
