@@ -2,6 +2,7 @@
 #include <string>
 #include <list> 
 #include "tokenizador.h"
+#include "indexadorInformacion.h"
 
 using namespace std;
 
@@ -9,40 +10,21 @@ using namespace std;
 
 void imprimirListaSTL(const list<string>& cadena)
 {
-        list<string>::const_iterator itCadena;
-        for(itCadena=cadena.begin();itCadena!=cadena.end();itCadena++)
-        {
-                cout << (*itCadena) << ", ";
-        }
-        cout << endl;
+    list<string>::const_iterator itCadena;
+    for(itCadena=cadena.begin();itCadena!=cadena.end();itCadena++)
+    {
+        cout << (*itCadena) << ", ";
+    }
+    cout << endl;
 }
 
 int
 main(void)
 {
-    Tokenizador a(",", true, false);
-    list<string> tokens;
-    string s = "p0 http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es p1 p2";
-    a.Tokenizar(s, tokens);
-    imprimirListaSTL(tokens);
-    a.DelimitadoresPalabra("@");
-    a.Tokenizar(s, tokens);
-    imprimirListaSTL(tokens);
-    a.DelimitadoresPalabra("/ ");
-    a.Tokenizar(s, tokens);
-    imprimirListaSTL(tokens);
-
-    a.DelimitadoresPalabra("_:/.?&-=#@");
-    a.Tokenizar(s, tokens);
-    imprimirListaSTL(tokens);
-
-    a.DelimitadoresPalabra("/&");
-    s = "p0 hhttp://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013 p1 p2";
-    a.Tokenizar(s, tokens);
-    imprimirListaSTL(tokens);
-
-    s = "p0 Http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013 p1 p2";
-    a.Tokenizar(s, tokens);
-    imprimirListaSTL(tokens);
-
+    Fecha fecha;
+    tm pene = fecha.getFecha();
+    cout << asctime(&pene) << endl;
+    fecha.~Fecha();
+    pene = fecha.getFecha();
+    cout << asctime(&pene) << endl;
 }
