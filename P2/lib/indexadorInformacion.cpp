@@ -13,6 +13,18 @@ Fecha::Fecha()
     this->fecha = *(localtime(&timer));
 }
 
+// Constructor con parametros
+Fecha::Fecha(const tm &tiempo)
+{
+    this->fecha = tiempo;
+}
+
+// Contructor de copia
+Fecha::Fecha(const Fecha &fech)
+{
+    this->fecha = fech.fecha;
+}
+
 // Destructor de la clase fecha
 Fecha::~Fecha()
 {
@@ -32,6 +44,33 @@ tm Fecha::getFecha() const
     return this->fecha;
 }
 
+// Operador menor
+bool Fecha::operator<(const Fecha &fech)
+{
+    tm aux = fech.fecha;
+
+    if (difftime (mktime(&this->fecha), mktime(&aux)) < 0)
+        return true;
+    else
+        return false;
+}
+
+// Operador asignacion
+Fecha& Fecha::operator=(const Fecha &fech)
+{
+    if(this != &fech)
+    {
+        this->fecha = fech.getFecha();
+    }
+
+    return *this;
+}
+
+// Operador mayor igual
+bool Fecha::operator>=(const Fecha &fech)
+{
+    return !(*this < fech);
+}
 
   //////////////////////////////
  //     Clase InfTermDoc     //
@@ -41,6 +80,12 @@ tm Fecha::getFecha() const
 InfTermDoc::InfTermDoc()
 {
     this->ft = 0;
+}
+
+// Setter Ft
+void InfTermDoc::setFt(const int &valor)
+{
+    this->ft = valor;
 }
 
 // Constructor de copia
@@ -95,11 +140,23 @@ InformacionTermino::InformacionTermino(const InformacionTermino &copia)
     this->l_docs = copia.l_docs;
 }
 
+// Setter ftc
+void InformacionTermino::setFtc(const int &valor)
+{
+    this->ftc = valor;
+}
+
 // Destructor
 InformacionTermino::~InformacionTermino()
 {
     this->ftc = 0;
     this->l_docs.clear(); 
+}
+
+// Metodo para insertar la información del termino en l_docs
+void InformacionTermino::insertarInfTermDoc(const int &idDoc, const InfTermDoc &infoTerminoDocumento)
+{
+    l_docs.insert({idDoc, infoTerminoDocumento});
 }
 
 // Operador asignacion
@@ -175,6 +232,85 @@ InfDoc& InfDoc::operator=(const InfDoc &copia)
     return *this;
 }
 
+// Incrementa en uno la variable numPal
+void InfDoc::incrementaNumPal()
+{
+    this->numPal++;
+} 
+
+// Incrementa en numPal la variable numPal
+void InfDoc::incrementaNumPal(const int &numPal)
+{
+    this->numPal += numPal;
+} 
+
+// Incrementa en uno la variable numPalSinParada
+void InfDoc::incrementaNumPalSinParada()
+{
+    this->numPalSinParada++;
+}
+
+// Incrementa en uno la variable numPalDiferente
+void InfDoc::incrementaNumPalDiferentes()
+{
+    this->numPalDiferentes++;
+}
+
+// Setter tamBytes
+void InfDoc::setTamBytes(const int &tamBytes)
+{
+    this->tamBytes = tamBytes;
+} 
+
+// Setter Fecha
+void InfDoc::setFecha(const Fecha &fech)
+{
+    this->fechaModificacion = fech;
+}
+
+// Setter idDoc
+void InfDoc::setIdDoc(const int &id)
+{
+    this->idDoc = id;
+}
+
+// Getter
+int InfDoc::getIdDoc()
+{
+    return this->idDoc;
+}
+
+// Getter
+int InfDoc::getNumPal()
+{
+    return this->numPal;
+}
+
+// Getter
+int InfDoc::getNumPalSinParada()
+{
+    return this->numPalSinParada;
+}
+
+// Getter
+int InfDoc::getNumPalDiferentes()
+{
+    return this->numPalDiferentes;
+}
+
+// Getter
+int InfDoc::getTamBytes()
+{
+    return this->tamBytes;
+}
+
+// Getter 
+Fecha InfDoc::getFecha()
+{
+    return this->fechaModificacion;
+}
+
+
 // Operador salida
 ostream& operator<<(ostream& s, const InfDoc& p) 
 {
@@ -228,6 +364,66 @@ InfColeccionDocs& InfColeccionDocs::operator=(const InfColeccionDocs &copia)
         this->tamBytes = copia.tamBytes;
     }
     return *this;
+}
+
+// Incrementa en uno la variable numDocs
+void InfColeccionDocs::incrementaNumDocs()
+{ 
+    numDocs++;
+}
+
+// Incrementa en uno la variable numTotalPal
+void InfColeccionDocs::incrementaNumTotalPal(const int &palabras)
+{
+    numTotalPal += palabras;
+} 
+
+// Incrementa en uno la variable numTotalPalSinParada
+void InfColeccionDocs::incrementaNumTotalPalSinParada(const int &palabras)
+{
+    numTotalPalSinParada += palabras;
+}
+
+// Incrementa en uno la variable numTotalPalDiferente
+void InfColeccionDocs::incrementaNumTotalPalDiferentes()
+{
+    numTotalPalDiferentes++;
+}
+
+// Setter tamBytes
+void InfColeccionDocs::sumTamBytes(const int &tamBytes)
+{
+    this->tamBytes += tamBytes;
+} 
+
+// Getter
+int InfColeccionDocs::getNumDocs()
+{
+    return this->numDocs;
+}
+
+// Getter
+int InfColeccionDocs::getNumTotalPal()
+{
+    return this->numTotalPal;
+}
+
+// Getter
+int InfColeccionDocs::getNumTotalPalSinParada()
+{
+    return this->numTotalPalSinParada;
+}
+
+// Getter
+int InfColeccionDocs::getNumTotalPalDiferentes()
+{
+    return this->numTotalPalDiferentes;
+}
+
+// Getter
+int InfColeccionDocs::getTamBytes()
+{
+    return this->tamBytes;
 }
 
 // Operador salida

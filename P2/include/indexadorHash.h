@@ -1,10 +1,14 @@
 #ifndef __INDEXADORHASH__
 #define __INDEXADORHASH__
 
+#include <unistd.h>
+#include <sys/mman.h>
+#include <fcntl.h>
 #include <iostream>
 #include "indexadorInformacion.h"
 #include <unordered_set>
 #include "tokenizador.h"
+#include "stemmer.h"
 
 using namespace std;
 
@@ -47,6 +51,7 @@ class IndexadorHash {
         ~IndexadorHash();
             // Destructor 
         IndexadorHash& operator= (const IndexadorHash&);
+            // Sobrecarga del operador asignación
         bool Indexar(const string& ficheroDocumentos);
             /* Devuelve true si consigue crear el índice para la colección de
             documentos detallada en ficheroDocumentos, el cual contendrá un nombre
@@ -307,6 +312,11 @@ class IndexadorHash {
         bool almacenarPosTerm; 
             // Si es true se almacenará la posición en la que aparecen los términos
             // dentro del documento en la clase InfTermDoc
+        void GuardarStopWords(const string &);
+            // Método auxiliar que lee el ficheroStopWords y guarda las palabras de parada
+            // en stopWords
+        bool IndexarDocumento(const string &documento, int idDoc = 0);
+            // Devuelve true si consigue indexar el documento. Guarda la información a indexar del documento
 
     friend ostream& operator<<(ostream& s, const IndexadorHash& p) 
     {

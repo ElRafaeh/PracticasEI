@@ -5,7 +5,7 @@ OPTIONS= -g -std=gnu++0x
 DEBUG= #-D DEBUG
 LIBDIR=lib
 INCLUDEDIR=include
-_OBJ= tokenizador.o indexadorInformacion.o
+_OBJ= tokenizador.o indexadorInformacion.o indexadorHash.o stemmer.o
 OBJ = $(patsubst %,$(LIBDIR)/%,$(_OBJ)) 
 
 all: practica1

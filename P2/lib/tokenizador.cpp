@@ -5,6 +5,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <cstdlib>
+#include <string.h>
+
+
 
 // Operador salida
 ostream& operator<<(ostream& os, const Tokenizador& tokenizador)
@@ -43,27 +46,30 @@ void Tokenizador::copia(const Tokenizador& copia)
 void Tokenizador::rellenarCaracteresISO()
 {
     // Rellenamos el array de caracteresISO
-    for(char i = 0; i < 256; i++)
+    for(unsigned char i = 0; i < 255; i++)
     {
         switch (i)
         {   
-            case '\300'...'\305': case '\340'...'\345':
-                this->caracteresIso[i] += 'a';
+            case 192: case 193: case 196: case 224: case 225: case 228:
+                this->caracteresIso[i] = 'a';
                 break;
-            case '\310'...'\313': case '\350'...'\353':
-                this->caracteresIso[i] += 'e';
+            case 200: case 201: case 203: case 232: case 233: case 235:
+                this->caracteresIso[i] = 'e';
                 break;
-            case '\314'...'\317': case '\354'...'\357':
-                this->caracteresIso[i] += 'i';
+            case 236: case 237: case 239: case 204: case 205: case 207:
+                this->caracteresIso[i] = 'i';
                 break;
-            case '\321':
-                this->caracteresIso[i] += '\361';
+            case 209: 
+                this->caracteresIso[i] = '\361';
                 break;
-            case '\322'...'\326': case '\362'...'\366':
-                this->caracteresIso[i] += 'o';
+            case 210: case 211: case 214: case 242: case 243: case 246:
+                this->caracteresIso[i] = 'o';
                 break;
-            case '\331'...'\334': case '\371'...'\374':
-                this->caracteresIso[i] += 'u';
+            case 249: case 250: case 252: case 217: case 218: case 220:
+                this->caracteresIso[i] = 'u';
+                break;
+            default:
+                this->caracteresIso[i] = i;
                 break;
         }                 
     }
@@ -76,6 +82,7 @@ Tokenizador::Tokenizador(const string& delimitadoresPalabra, const bool& kcasosE
     this->casosEspeciales = kcasosEspeciales;
     this->pasarAminuscSinAcentos = minuscSinAcentos;
     this->delimiters = eliminaDuplicados(this->delimiters);
+    bzero(this->caracteresIso, 256);
     rellenarCaracteresISO();
 }
 
@@ -84,6 +91,7 @@ Tokenizador::Tokenizador(const Tokenizador& copia)
 {
     this->copia(copia);
     this->delimiters = eliminaDuplicados(this->delimiters);
+    bzero(this->caracteresIso, 256);
     rellenarCaracteresISO();
 }
 
@@ -93,6 +101,7 @@ Tokenizador::Tokenizador()
     this->delimiters = ",;:.-/+*\\ '\"{}[]()<>?!??&#=\t\n\r@";
     this->casosEspeciales = true;
     this->pasarAminuscSinAcentos = false;
+    bzero(this->caracteresIso, 256);
     rellenarCaracteresISO();
 }
 
@@ -100,7 +109,7 @@ Tokenizador::Tokenizador()
 Tokenizador::~Tokenizador()
 {
     delimiters.clear();
-    delete this->caracteresIso;
+    bzero(this->caracteresIso, 256);
 }
 
 // Operador de asignacion
@@ -122,7 +131,7 @@ string Tokenizador::convertirSinMayusSinAcen(string str) const
 
     for(it = str.begin(); it != str.end(); it++)
     {
-        minusculas += this->caracteresIso[*it];               
+        minusculas += tolower(this->caracteresIso[(unsigned char)*it]);               
     }
 
     return minusculas;
@@ -484,7 +493,8 @@ bool Tokenizador::TokenizarListaFicheros(const string &i) const
 }
 
 // Funcion para tokenizar un directorio
-bool Tokenizador::TokenizarDirectorio (const string& dirAIndexar) const {
+bool Tokenizador::TokenizarDirectorio (const string& dirAIndexar) const 
+{
     struct stat dir;
     // Compruebo la existencia del directorio
     int err=stat(dirAIndexar.c_str(), &dir);
@@ -524,7 +534,7 @@ void Tokenizador::CasosEspeciales(const bool& nuevoCasosEspeciales)
 }
 
 // Devuelve la variable casos especiales
-bool Tokenizador::CasosEspeciales() 
+bool Tokenizador::CasosEspeciales() const
 {
     return casosEspeciales;
 }
@@ -536,7 +546,7 @@ void Tokenizador::PasarAminuscSinAcentos(const bool& nuevoPasarAminuscSinAcentos
 }
 
 // Devuelve la variable pasaMinusculas...
-bool Tokenizador::PasarAminuscSinAcentos()
+bool Tokenizador::PasarAminuscSinAcentos() const 
 {
     return pasarAminuscSinAcentos;
 }

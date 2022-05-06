@@ -17,9 +17,13 @@ class Fecha
 {
     public:
         Fecha();
+        Fecha(const tm &);
         Fecha(const Fecha &);
         ~Fecha();
         tm getFecha() const;
+        Fecha& operator=(const Fecha &);
+        bool operator<(const Fecha &);
+        bool operator>=(const Fecha &);
     private:
         tm fecha;
 };
@@ -35,8 +39,13 @@ class InfTermDoc {
         // Inicializa ft = 0
         ~InfTermDoc ();
         // Pone ft = 0
-        InfTermDoc & operator= (const InfTermDoc &);
+        InfTermDoc & operator=(const InfTermDoc &);
         // Añadir cuantos métodos se consideren necesarios para manejar la parte privada de la clase
+        void incrementarFt();
+        int getFt();
+        void setFt(const int &);
+        void insertarPosTerm(const int &);
+        list<int> getPosTerm();
     private:
         int ft;
         // Frecuencia del término en el documento
@@ -44,7 +53,7 @@ class InfTermDoc {
         // Solo se almacenaría esta información si el campo privado del indexador almacenarPosTerm == true
         // Lista de números de palabra en los que aparece el término en el documento. Los números de palabra comenzarán desde cero (la primera
         //palabra del documento). Se numerarán las palabras de parada. Estará ordenada de menor a mayor posición.
-};
+};  
 
   //////////////////////////////////
  //   Clase InformacionTermino   //
@@ -59,6 +68,11 @@ class InformacionTermino {
         // Pone ftc = 0 y vacía l_docs
         InformacionTermino & operator= (const InformacionTermino &);
         // Añadir cuantos métodos se consideren necesarios para manejar la parte privada de la clase
+        void incrementarFtc();
+        int getFtc();
+        void setFtc(const int &);
+        void insertarInfTermDoc(const int &, const InfTermDoc &);
+        unordered_map<int, InfTermDoc> getL_docs();
     private:
         int ftc; // Frecuencia total del término en la colección
         unordered_map<int, InfTermDoc> l_docs;
@@ -77,6 +91,19 @@ class InfDoc {
         ~InfDoc ();
         InfDoc & operator= (const InfDoc &);
         // Añadir cuantos métodos se consideren necesarios para manejar la parte privada de la clase
+        void incrementaNumPal(); // Incrementa en uno la variable numTotalPal
+        void incrementaNumPal(const int &); // Incrementa en uno la variable numTotalPal
+        void incrementaNumPalSinParada(); // Incrementa en uno la variable numTotalPalSinParada
+        void incrementaNumPalDiferentes(); // Incrementa en uno la variable numTotalPalDiferente
+        void setIdDoc(const int &);
+        void setFecha(const Fecha &);
+        void setTamBytes(const int &); 
+        int getNumPal();
+        int getNumPalSinParada();
+        int getNumPalDiferentes();
+        int getIdDoc();
+        Fecha getFecha();
+        int getTamBytes();
     private:
         int idDoc;
         // Identificador del documento. El primer documento indexado en la colección será el identificador 1
@@ -103,6 +130,16 @@ class InfColeccionDocs {
         ~InfColeccionDocs ();
         InfColeccionDocs & operator= (const InfColeccionDocs &);
         // Añadir cuantos m#todos se consideren necesarios para manejar la parte privada de la clase
+        void incrementaNumDocs(); // Incrementa en uno la variable numDocs
+        void incrementaNumTotalPal(const int &); // Incrementa en uno la variable numTotalPal
+        void incrementaNumTotalPalSinParada(const int &); // Incrementa en uno la variable numTotalPalSinParada
+        void incrementaNumTotalPalDiferentes(); // Incrementa en uno la variable numTotalPalDiferente
+        void sumTamBytes(const int &); // Setter tamBytes
+        int getNumDocs();
+        int getNumTotalPal();
+        int getNumTotalPalSinParada();
+        int getNumTotalPalDiferentes();
+        int getTamBytes();
     private:
         int numDocs;
         // Nº total de documentos en la colección
@@ -150,6 +187,12 @@ class InformacionPregunta {
         ~InformacionPregunta ();
         InformacionPregunta & operator= (const InformacionPregunta &);
         // Añadir cuantos métodos se consideren necesarios para manejar la parte privada de la clase
+        void incrementaNumTotalPal(); // Incrementa en uno la variable numTotalPal
+        void incrementaNumTotalPalSinParada(); // Incrementa en uno la variable numTotalPalSinParada
+        void incrementaNumTotalPalDiferentes(); // Incrementa en uno la variable numTotalPalDiferente
+        int getNumTotalPal();
+        int getNumTotalPalSinParada();
+        int getNumTotalPalDiferentes();
     private:
         int numTotalPal;
         // Nº total de palabras en la pregunta
