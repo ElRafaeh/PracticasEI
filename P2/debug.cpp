@@ -9,7 +9,7 @@ using namespace std;
 int
 main(void)
 {
-IndexadorHash b("./StopWordsEspanyol.txt", ". ,:", false, false, "./indicePrueba", 0, false, true);
+IndexadorHash b("./StopWordsEspanyol.txt", ". ,:", false, false, "./indicePrueba", 0, true, true);
 
 b.Indexar("./listaFicheros_corto.txt");
 b.GuardarIndexacion();

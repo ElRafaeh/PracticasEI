@@ -243,6 +243,10 @@ class IndexadorHash {
             el contenido del campo privado ?indiceDocs? para el documento con nombre
             ?nomDoc?: cout << nomDoc << ?\t? << InfDoc << endl; . Si no existe no se
             muestra nada */
+        bool GuardarIndiceDisco();
+            // Método para guardar el índice en memoria secundaria cuando almacenarEnDico = true
+        bool GuardarIndiceDocsDisco();
+            // Método para guardar el índiceDocs en memoria secundaria cuando almacenarEnDico = true
     private:
         IndexadorHash();
             /* Este constructor se pone en la parte privada porque no se permitirá
@@ -319,6 +323,13 @@ class IndexadorHash {
             // Devuelve true si consigue indexar el documento. Guarda la información a indexar del documento
         string aplicarStemYMayus(string) const; 
             // Se le aplica stemming y el tratamiento de mayusculas a la palabra
+        list<string> indicesEnDisco;
+            // Donde se guardan los indices cuando almacernarEnDisco == true
+        list<string> indicesDocsEnDisco;
+            // Donde se guardan los indiceDocs cuando almacernarEnDisco == true
+        int indicesDisco;   // Numero de veces que se guardo indice en disco
+        int indicesDocsDisco; // Numero de veces que se guardo indiceDocs en disco
+        
 
     friend ostream& operator<<(ostream& s, const IndexadorHash& p) 
     {

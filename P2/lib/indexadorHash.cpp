@@ -6,6 +6,7 @@
 #include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/sysinfo.h>
 
 
 // AUXILIAR: Guarda las palabras de parada en stopWords
@@ -51,6 +52,18 @@ IndexadorHash::IndexadorHash(const string& fichStopWords, const string& delimita
     this->almacenarPosTerm = almPosTerm;
 }
 
+// Constructor por defecto
+IndexadorHash::IndexadorHash()
+{
+    this->ficheroStopWords = "./StopWordsEspanyol.txt";
+    GuardarStopWords(ficheroStopWords);
+    this->tok = Tokenizador();
+    this->directorioIndice = get_current_dir_name();
+    this->tipoStemmer = 0;
+    this->almacenarEnDisco = false;
+    this->almacenarPosTerm = true;
+}
+
 // Constructor a raíz de una indexación previa
 IndexadorHash::IndexadorHash(const string &directorioIndexacion)
 {
@@ -73,6 +86,7 @@ IndexadorHash::IndexadorHash(const IndexadorHash &copia)
     this->tipoStemmer = copia.tipoStemmer;
     this->almacenarEnDisco = copia.almacenarEnDisco;
     this->almacenarPosTerm = copia.almacenarPosTerm;
+    this->indicesEnDisco = copia.indicesEnDisco;
 }
 
 // Destructor
@@ -113,6 +127,100 @@ IndexadorHash& IndexadorHash::operator=(const IndexadorHash &copia)
     return *this;
 }
 
+// Guardar el índice en disco
+bool IndexadorHash::GuardarIndiceDisco()
+{
+    struct stat dir;
+    string guardar = "";
+
+    int err = stat(this->directorioIndice.c_str(), &dir);
+    // Si no existe el directorio se crea
+    if(err==-1 || !S_ISDIR(dir.st_mode))
+        system(("mkdir "+this->directorioIndice).c_str());
+
+    fstream fich((directorioIndice+"/indiceDisco" + to_string(this->indicesDisco)).c_str(), ios::out);
+
+    if(fich.is_open())
+    {
+        // Guardamos indice
+        for(unordered_map<string, InformacionTermino>::const_iterator it = indice.begin(); it != indice.end(); it++)
+        {
+            guardar += it->first + " ";
+            guardar += to_string(it->second.getFtc()) + " ";
+            for(unordered_map<int, InfTermDoc>::const_iterator itIndiceTerm = it->second.l_docs.begin(); itIndiceTerm != it->second.l_docs.end(); itIndiceTerm++)
+            {
+                guardar += to_string(itIndiceTerm->first) + " ";
+                guardar += to_string(itIndiceTerm->second.getFt()) + " ";
+                
+                for(list<int>::const_iterator itPosTerm = itIndiceTerm->second.posTerm.begin(); itPosTerm != itIndiceTerm->second.posTerm.end(); itPosTerm++)
+                {
+                    guardar += to_string(*itPosTerm) + ",";
+                }
+                guardar += "\t";
+            }
+            guardar += "\n";
+        }
+        // Incrementamos la variable de veces que se ha guardado en disco
+        this->indicesDisco++;
+        // Insertamos el fichero donde se ha guardado la primera indexacion
+        this->indicesEnDisco.push_back((directorioIndice+ "/indiceDisco" + to_string(this->indicesDisco)));
+
+        // Escribimos en el fichero y lo guardamos
+        fich << guardar;
+        fich.close();
+
+        return true;
+    }
+    return false;
+}
+
+// Guardar el índiceDocs en disco
+bool IndexadorHash::GuardarIndiceDocsDisco()
+{
+    struct stat dir;
+    string guardar = "";
+
+    int err = stat(this->directorioIndice.c_str(), &dir);
+    // Si no existe el directorio se crea
+    if(err==-1 || !S_ISDIR(dir.st_mode))
+        system(("mkdir "+this->directorioIndice).c_str());
+
+    fstream fich((directorioIndice+"/indiceDocsDisco"+to_string(this->indicesDocsDisco)).c_str(), ios::out);
+
+    if(fich.is_open())
+    {
+        // Guardamos el indiceDocs
+        for(unordered_map<string, InfDoc>::const_iterator it = indiceDocs.begin(); it != indiceDocs.end(); it++)
+        {
+            guardar += it->first + ",";
+            guardar += to_string(it->second.getIdDoc()) + ",";
+            guardar += to_string(it->second.getNumPal()) + ",";
+            guardar += to_string(it->second.getNumPalSinParada()) + ",";
+            guardar += to_string(it->second.getNumPalDiferentes()) + ",";
+            guardar += to_string(it->second.getTamBytes()) + ",";
+            struct tm fecha = it->second.getFecha().getFecha();
+            guardar += to_string(fecha.tm_sec) + ",";
+            guardar += to_string(fecha.tm_min) + ",";
+            guardar += to_string(fecha.tm_hour) + ",";
+            guardar += to_string(fecha.tm_mday) + ",";
+            guardar += to_string(fecha.tm_mon) + ",";
+            guardar += to_string(fecha.tm_year) + ", ";
+        }
+        
+        // Incrementamos la variable de veces que se ha guardado en disco indiceDocs
+        this->indicesDocsDisco++;
+        // Insertamos el fichero donde se ha guardado la primera indexacion
+        this->indicesDocsEnDisco.push_back((directorioIndice+ "/indiceDocsDisco" + to_string(this->indicesDocsDisco)));
+
+        // Escribimos en el fichero y lo guardamos
+        fich << guardar;
+        fich.close();
+
+        return true;
+    }
+    return false;
+}
+
 // Metodo para indexar documento
 bool IndexadorHash::IndexarDocumento(const string &documento, int idDoc)
 {
@@ -120,19 +228,18 @@ bool IndexadorHash::IndexarDocumento(const string &documento, int idDoc)
     // Si el documento se ha abierto
     if(fd != -1)
     {
+        // Abrimos el archivo con mmap
+        int len = lseek(fd, 0, SEEK_END);   // len también es el tamaño del documento
+        if(len < 0) // Si la longitud es menor que cero significa que es un documento vacio
+            return true;
+        // Guardamos el texto del documento en *mbuf
+        char *mbuf = (char*) mmap(NULL, len, PROT_READ, MAP_PRIVATE, fd, 0);  
+
         InfDoc informacionDocumento;
         list<string> tokens;
         list<string>::iterator it;
         stemmerPorter stemmer;
         int posicionTerminoDocumento = 0;
-
-        // Abrimos el archivo con mmap
-        int len = lseek(fd, 0, SEEK_END);   // len también es el tamaño del documento
-        if(len < 0) // Si la longitud es menor que cero significa que es un documento vacio
-            return true;
-
-        char *mbuf = (char*) mmap(NULL, len, PROT_READ, MAP_PRIVATE, fd, 0);  
-        string infoDoc(mbuf);
     
         // Cerramos el documento
         close(fd);
@@ -159,7 +266,7 @@ bool IndexadorHash::IndexarDocumento(const string &documento, int idDoc)
         unordered_map<string, InformacionTermino>::iterator iteradorIndice;
 
         // Tokenizamos el fichero entero
-        tok.Tokenizar(infoDoc, tokens);
+        tok.Tokenizar(mbuf, tokens);
         // Recorremos los tokens o terminos del documento
         for(it = tokens.begin(); it != tokens.end(); it++)
         {
@@ -284,12 +391,30 @@ bool IndexadorHash::Indexar(const string &ficheroDocumentos)
             {
                 devolver = IndexarDocumento(documento);
             }
-        }
+            // Si la variable almacenarEnDisco está a true, almacenamos la indexacion en el disco duro
+            if(almacenarEnDisco)
+            {
+                struct sysinfo memInfo; 
+                sysinfo (&memInfo);
+                // Sacamos la cantidad de memoria total
+                long long totalPhysMem = memInfo.totalram; 
+                totalPhysMem *= memInfo.mem_unit;
 
-        // Si la variable almacenarEnDisco está a true, almacenamos la indexacion en el disco duro
-        if(almacenarEnDisco)
-        {
-            GuardarIndexacion();
+                // Sacamos la cantidad de memoria utilizada
+                long long physMemUsed = memInfo.totalram - memInfo.freeram; 
+                physMemUsed *= memInfo.mem_unit;
+
+                // Si la memoria que estamos usando es mayor o igual a la mitad de la memoria total vamos a guardar los indices en memoria principal
+                if(physMemUsed >= totalPhysMem/2)
+                {
+                    // Guardamos en disco
+                    GuardarIndiceDisco();
+                    GuardarIndiceDocsDisco();
+                    // Eliminamos de la memoria principal para que no ocupe memoria
+                    this->indice.clear();
+                    this->indiceDocs.clear();
+                }
+            }
         }
 
         return devolver;
@@ -620,15 +745,13 @@ bool IndexadorHash::IndexarPregunta(const string &preg)
                 if(iteradorIndicePregunta != indicePregunta.end())
                 {
                     iteradorIndicePregunta->second.incrementarFt();
-                    // Almacenamos la posicion del termino si almacenarPosTerm == true
-                    if(almacenarPosTerm) iteradorIndicePregunta->second.insertarPosTerm(posicionTerminoPregunta);
+                    iteradorIndicePregunta->second.insertarPosTerm(posicionTerminoPregunta);
                 }
                 else    // Si no esta indexado
                 {
                     InformacionTerminoPregunta informacionTermPreg;
                     informacionTermPreg.setFt(1);
-                    // Almacenamos la posicion del termino si almacenarPosTerm == true
-                    if(almacenarPosTerm) informacionTermPreg.insertarPosTerm(posicionTerminoPregunta);
+                    informacionTermPreg.insertarPosTerm(posicionTerminoPregunta);
 
                     indicePregunta.insert({*it, informacionTermPreg});
 
