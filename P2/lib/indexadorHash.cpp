@@ -7,6 +7,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/sysinfo.h>
+#include "stdio.h"
+#include "string.h"
 
 
 // AUXILIAR: Guarda las palabras de parada en stopWords
@@ -172,6 +174,27 @@ bool IndexadorHash::GuardarIndiceDisco()
         return true;
     }
     return false;
+}
+
+int parseLine(char* line){ 
+    int i = strlen(line); 
+    while (*line < '0' || *line > '9')  line++; 
+    line[i-3] = '\0'; 
+    i = atoi(line); 
+    return i; 
+}
+
+// Función para sacar el tamaño de memoria utilizado por 
+int getValue(){ //Note: this value is in KB! 
+    FILE* file = fopen("/proc/self/status", "r"); 
+    int result = -1; char line[128]; 
+    while (fgets(line, 128, file) != NULL){ 
+        if (strncmp(line, "VmRSS:", 6) == 0){ 
+            result = parseLine(line); break; 
+        } 
+    } 
+    fclose(file); 
+    return result; 
 }
 
 // Guardar el índiceDocs en disco
@@ -401,8 +424,7 @@ bool IndexadorHash::Indexar(const string &ficheroDocumentos)
                 totalPhysMem *= memInfo.mem_unit;
 
                 // Sacamos la cantidad de memoria utilizada
-                long long physMemUsed = memInfo.totalram - memInfo.freeram; 
-                physMemUsed *= memInfo.mem_unit;
+                long long physMemUsed = getValue();
 
                 // Si la memoria que estamos usando es mayor o igual a la mitad de la memoria total vamos a guardar los indices en memoria principal
                 if(physMemUsed >= totalPhysMem/2)
@@ -446,7 +468,6 @@ bool IndexadorHash::IndexarDirectorio(const string& dirAIndexar)
 bool IndexadorHash::GuardarIndexacion() const
 {
     struct stat dir;
-    string guardar = "";
 
     int err = stat(this->directorioIndice.c_str(), &dir);
     // Si no existe el directorio se crea
@@ -457,6 +478,7 @@ bool IndexadorHash::GuardarIndexacion() const
 
     if(fich.is_open())
     {
+        string guardar = "";
         // Empezamos a guardar términos
         guardar += ficheroStopWords + "\n"; // Fichero de stopwords
         for(unordered_set<string>::const_iterator it = stopWords.begin(); it != stopWords.end(); it++)  // Palabras de parada
