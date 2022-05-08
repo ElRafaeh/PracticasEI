@@ -354,13 +354,13 @@ bool IndexadorHash::GuardarIndexacion() const
         // Guardamos el indicePregunta
         for(unordered_map<string, InformacionTerminoPregunta>::const_iterator it = indicePregunta.begin(); it != indicePregunta.end(); it++)
         {
-            guardar += it->first + "\t";
-            guardar += to_string(it->second.getFt()) + "\t";
-            for(list<int>::const_iterator itPosTerm = it->second.getPosTerm().begin(); itPosTerm != it->second.getPosTerm().end(); itPosTerm++)
+            guardar += it->first + " ";
+            guardar += to_string(it->second.getFt()) + " ";
+            for(list<int>::const_iterator itPosTerm = it->second.posTerm.begin(); itPosTerm != it->second.posTerm.end(); itPosTerm++)
             {
                 guardar += to_string(*itPosTerm) + ",";
             }
-            guardar += " ";
+            guardar += "\t";
         }
         guardar += "\n";
         // Guardamos la pregunta indexada
@@ -379,8 +379,14 @@ bool IndexadorHash::GuardarIndexacion() const
             guardar += to_string(it->second.getNumPal()) + ",";
             guardar += to_string(it->second.getNumPalSinParada()) + ",";
             guardar += to_string(it->second.getNumPalDiferentes()) + ",";
-            guardar += to_string(it->second.getTamBytes()) + ", ";
-            // guardar += it->second.getFecha() + "\n";
+            guardar += to_string(it->second.getTamBytes()) + ",";
+            struct tm fecha = it->second.getFecha().getFecha();
+            guardar += to_string(fecha.tm_sec) + ",";
+            guardar += to_string(fecha.tm_min) + ",";
+            guardar += to_string(fecha.tm_hour) + ",";
+            guardar += to_string(fecha.tm_mday) + ",";
+            guardar += to_string(fecha.tm_mon) + ",";
+            guardar += to_string(fecha.tm_year) + ", ";
         }
         guardar += "\n";
         // Guardamos indice
@@ -464,7 +470,25 @@ bool IndexadorHash::RecuperarIndexacion(const string &directorioIndexacion)
         // Cogemos el indicePregunta
         getline(ss, aux, '\n');
         if(aux != "")
+        {
             ss2 = stringstream(aux);
+            while(getline(ss2, aux, '\t'))
+            {
+                InformacionTerminoPregunta infTerminoPregunta;
+                string terminoPregunta;
+                stringstream ss3(aux); 
+                getline(ss3, terminoPregunta, ' ');
+                getline(ss3, aux, ' ');
+                infTerminoPregunta.setFt(stoi(aux));
+        
+                ss3 = stringstream(aux);
+                while(getline(ss3, aux, ','))
+                {
+                    infTerminoPregunta.insertarPosTerm(stoi(aux));
+                }
+                this->indicePregunta.insert({terminoPregunta, infTerminoPregunta});
+            }
+        }
         // Cogemos la pregunta
         getline(ss, this->pregunta, '\n');   
         // Cogemos los datos de informacionColeccionDocs
@@ -498,8 +522,21 @@ bool IndexadorHash::RecuperarIndexacion(const string &directorioIndexacion)
             inf.setNumPalDiferentes(stoi(aux));
             getline(ss3, aux, ',');
             inf.setTamBytes(stoi(aux));
-            //getline(ss3, aux, ',');
-            //inf.setFecha(stoi(aux));
+            struct tm fecha;
+            getline(ss3, aux, ',');
+            fecha.tm_sec = stoi(aux);
+            getline(ss3, aux, ',');
+            fecha.tm_min = stoi(aux);
+            getline(ss3, aux, ',');
+            fecha.tm_hour = stoi(aux);
+            getline(ss3, aux, ',');
+            fecha.tm_mday = stoi(aux);
+            getline(ss3, aux, ',');
+            fecha.tm_mon = stoi(aux);
+            getline(ss3, aux, ',');
+            fecha.tm_year = stoi(aux);
+
+            inf.setFecha(fecha);
             this->indiceDocs.insert({nomDoc, inf});
         }
         // Cogemos la informacion de los terminos indice
@@ -583,13 +620,15 @@ bool IndexadorHash::IndexarPregunta(const string &preg)
                 if(iteradorIndicePregunta != indicePregunta.end())
                 {
                     iteradorIndicePregunta->second.incrementarFt();
-                    iteradorIndicePregunta->second.insertarPosTerm(posicionTerminoPregunta);
+                    // Almacenamos la posicion del termino si almacenarPosTerm == true
+                    if(almacenarPosTerm) iteradorIndicePregunta->second.insertarPosTerm(posicionTerminoPregunta);
                 }
                 else    // Si no esta indexado
                 {
                     InformacionTerminoPregunta informacionTermPreg;
                     informacionTermPreg.setFt(1);
-                    informacionTermPreg.insertarPosTerm(posicionTerminoPregunta);
+                    // Almacenamos la posicion del termino si almacenarPosTerm == true
+                    if(almacenarPosTerm) informacionTermPreg.insertarPosTerm(posicionTerminoPregunta);
 
                     indicePregunta.insert({*it, informacionTermPreg});
 

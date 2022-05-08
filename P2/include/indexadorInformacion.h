@@ -24,6 +24,7 @@ class Fecha
         Fecha& operator=(const Fecha &);
         bool operator<(const Fecha &);
         bool operator>=(const Fecha &);
+        
     private:
         tm fecha;
 };
@@ -182,16 +183,10 @@ class InformacionTerminoPregunta {
         void incrementarFt();
         void setFt(const int &);
         void insertarPosTerm(const int &);
+        list<int> posTerm;
     private:
         int ft;
         // Frecuencia total del término en la pregunta
-        list<int> posTerm;
-        // Solo se almacenará esta información si el campo privado del indexador
-        // almacenarPosTerm == true;
-        // Lista de números de palabra en los que aparece el término en la
-        // pregunta. Los números de palabra comenzarán desde cero (la primera
-        // palabra de la pregunta). Se numerarán las palabras de parada. Estará
-        // ordenada de menor a mayor posición.
 };
 
   //////////////////////////////////
