@@ -42,17 +42,15 @@ class InfTermDoc {
         InfTermDoc & operator=(const InfTermDoc &);
         // Añadir cuantos métodos se consideren necesarios para manejar la parte privada de la clase
         void incrementarFt();
-        int getFt();
+        void decrementarFt();
+        int getFt() const;
         void setFt(const int &);
         void insertarPosTerm(const int &);
-        list<int> getPosTerm();
+        list<int>& getPosTerm() const;
+        list<int> posTerm;
     private:
         int ft;
         // Frecuencia del término en el documento
-        list<int> posTerm;
-        // Solo se almacenaría esta información si el campo privado del indexador almacenarPosTerm == true
-        // Lista de números de palabra en los que aparece el término en el documento. Los números de palabra comenzarán desde cero (la primera
-        //palabra del documento). Se numerarán las palabras de parada. Estará ordenada de menor a mayor posición.
 };  
 
   //////////////////////////////////
@@ -69,15 +67,18 @@ class InformacionTermino {
         InformacionTermino & operator= (const InformacionTermino &);
         // Añadir cuantos métodos se consideren necesarios para manejar la parte privada de la clase
         void incrementarFtc();
-        int getFtc();
+        int getFtc() const;
         void setFtc(const int &);
         void insertarInfTermDoc(const int &, const InfTermDoc &);
         unordered_map<int, InfTermDoc> getL_docs();
-    private:
-        int ftc; // Frecuencia total del término en la colección
+        void restarFtc(const int &);
+        void eliminarDoc(const unordered_map<int, InfTermDoc>::iterator &);
         unordered_map<int, InfTermDoc> l_docs;
         // Tabla Hash que se accederá por el id del documento, devolviendo un objeto de la clase InfTermDoc que contiene 
         // toda la información de aparición del término en el documento
+    private:
+        int ftc; // Frecuencia total del término en la colección
+        
 };
 
   //////////////////////////////////
@@ -97,13 +98,16 @@ class InfDoc {
         void incrementaNumPalDiferentes(); // Incrementa en uno la variable numTotalPalDiferente
         void setIdDoc(const int &);
         void setFecha(const Fecha &);
+        void setNumPal(const int &val);
+        void setNumPalSinParada(const int &val);
+        void setNumPalDiferentes(const int &val);
         void setTamBytes(const int &); 
-        int getNumPal();
-        int getNumPalSinParada();
-        int getNumPalDiferentes();
-        int getIdDoc();
-        Fecha getFecha();
-        int getTamBytes();
+        int getNumPal() const;
+        int getNumPalSinParada() const;
+        int getNumPalDiferentes() const;
+        int getIdDoc() const;
+        Fecha getFecha() const;
+        int getTamBytes() const;
     private:
         int idDoc;
         // Identificador del documento. El primer documento indexado en la colección será el identificador 1
@@ -135,11 +139,21 @@ class InfColeccionDocs {
         void incrementaNumTotalPalSinParada(const int &); // Incrementa en uno la variable numTotalPalSinParada
         void incrementaNumTotalPalDiferentes(); // Incrementa en uno la variable numTotalPalDiferente
         void sumTamBytes(const int &); // Setter tamBytes
-        int getNumDocs();
-        int getNumTotalPal();
-        int getNumTotalPalSinParada();
-        int getNumTotalPalDiferentes();
-        int getTamBytes();
+        int getNumDocs() const;
+        int getNumTotalPal() const; 
+        int getNumTotalPalSinParada() const;
+        int getNumTotalPalDiferentes() const;
+        int getTamBytes() const;
+        void decrementaNumDocs();
+        void decrementaNumTotalPalDiferentes();
+        void restaNumTotalPal(const int &);
+        void restaNumTotalPalSinParada(const int &);
+        void restaTamBytes(const int &);
+        void setNumDocs(const int &val);
+        void setNumTotalPal(const int &val);
+        void setNumTotalPalSinParada(const int &val);
+        void setNumTotalPalDiferentes(const int &val);
+        void setTamBytes(const int &val);
     private:
         int numDocs;
         // Nº total de documentos en la colección
@@ -163,13 +177,17 @@ class InformacionTerminoPregunta {
         InformacionTerminoPregunta ();
         ~InformacionTerminoPregunta ();
         InformacionTerminoPregunta & operator=(const InformacionTerminoPregunta &);
-        // Añadir cuantos métodos se consideren necesarios para manejar la parte privada de la clase
+        int getFt() const;
+        list<int> getPosTerm() const;
+        void incrementarFt();
+        void setFt(const int &);
+        void insertarPosTerm(const int &);
     private:
         int ft;
         // Frecuencia total del término en la pregunta
         list<int> posTerm;
         // Solo se almacenará esta información si el campo privado del indexador
-        //almacenarPosTerm == true;
+        // almacenarPosTerm == true;
         // Lista de números de palabra en los que aparece el término en la
         // pregunta. Los números de palabra comenzarán desde cero (la primera
         // palabra de la pregunta). Se numerarán las palabras de parada. Estará
@@ -190,9 +208,12 @@ class InformacionPregunta {
         void incrementaNumTotalPal(); // Incrementa en uno la variable numTotalPal
         void incrementaNumTotalPalSinParada(); // Incrementa en uno la variable numTotalPalSinParada
         void incrementaNumTotalPalDiferentes(); // Incrementa en uno la variable numTotalPalDiferente
-        int getNumTotalPal();
-        int getNumTotalPalSinParada();
-        int getNumTotalPalDiferentes();
+        void setNumTotalPal(const int &);
+        void setNumTotalPalSinParada(const int &);
+        void setNumTotalPalDiferentes(const int &);
+        int getNumTotalPal() const;
+        int getNumTotalPalSinParada() const;
+        int getNumTotalPalDiferentes() const;
     private:
         int numTotalPal;
         // Nº total de palabras en la pregunta
@@ -200,7 +221,6 @@ class InformacionPregunta {
         // Nº total de palabras sin stop-words en la pregunta
         int numTotalPalDiferentes;
         // Nº total de palabras diferentes en la pregunta que no sean stop-words (sin acumular la frecuencia de cada una de ellas)
-};
-    
+};  
 
 #endif

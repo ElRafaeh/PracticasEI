@@ -95,6 +95,12 @@ InfTermDoc::InfTermDoc(const InfTermDoc &copia)
     this->posTerm = copia.posTerm;
 }
 
+// Getter de Ft
+int InfTermDoc::getFt() const
+{
+    return this->ft;
+}
+
 // Destructor
 InfTermDoc::~InfTermDoc()
 {
@@ -114,12 +120,34 @@ InfTermDoc& InfTermDoc::operator=(const InfTermDoc &copia)
     return *this;
 }
 
+// Incrementa Ft
+void InfTermDoc::incrementarFt()
+{
+    this->ft++;
+}
+
+// Inserta en posterm la posicion
+void InfTermDoc::insertarPosTerm(const int &pos)
+{
+    this->posTerm.push_back(pos);
+}
+
+// Decrementa Ft
+void InfTermDoc::decrementarFt()
+{
+    this->ft--;
+}
+
 // Operador salida
 ostream& operator<<(ostream& s, const InfTermDoc& p) 
 {
     s << "ft: " << p.ft;
     // A continuación se mostrarían todos los elementos de p.posTerm (?posicion TAB posicion TAB ... posicion, es decir nunca finalizará en un TAB?): 
-    //s << "\t" << posicion;
+    for(list<int>::const_iterator it = p.posTerm.begin(); it != p.posTerm.end(); it++)
+    {
+        s << "\t" << *it;
+    }
+        
     return s;
 }
 
@@ -140,10 +168,28 @@ InformacionTermino::InformacionTermino(const InformacionTermino &copia)
     this->l_docs = copia.l_docs;
 }
 
+// Getter
+int InformacionTermino::getFtc() const
+{
+    return this->ftc;
+}
+
 // Setter ftc
 void InformacionTermino::setFtc(const int &valor)
 {
     this->ftc = valor;
+}
+
+// Restar a ftc
+void InformacionTermino::restarFtc(const int &valor)
+{
+    this->ftc -= valor;
+}
+
+// Eliminar documento
+void InformacionTermino::eliminarDoc(const  unordered_map<int, InfTermDoc>::iterator &it)
+{
+    this->l_docs.erase(it);
 }
 
 // Destructor
@@ -153,10 +199,22 @@ InformacionTermino::~InformacionTermino()
     this->l_docs.clear(); 
 }
 
+// Incrementamos ftc
+void InformacionTermino::incrementarFtc()
+{
+    this->ftc++;
+}
+
 // Metodo para insertar la información del termino en l_docs
 void InformacionTermino::insertarInfTermDoc(const int &idDoc, const InfTermDoc &infoTerminoDocumento)
 {
     l_docs.insert({idDoc, infoTerminoDocumento});
+}
+
+// Devuelve l_docs
+unordered_map<int, InfTermDoc> InformacionTermino::getL_docs()
+{
+    return this->l_docs;
 }
 
 // Operador asignacion
@@ -176,7 +234,11 @@ ostream& operator<<(ostream& s, const InformacionTermino& p)
 {
     s << "Frecuencia total: " << p.ftc << "\tfd: " << p.l_docs.size();
     // A continuación se mostraráan todos los elementos de p.l_docs: 
-    // s << "\tId.Doc: " << idDoc << "\t" << InfTermDoc;
+    for(unordered_map<int, InfTermDoc>::const_iterator it = p.l_docs.begin(); it != p.l_docs.end(); it++)
+    {
+        s << "\tId.Doc: " << it->first << "\t" << it->second;
+    }
+    
     return s;
 }
 
@@ -268,6 +330,22 @@ void InfDoc::setFecha(const Fecha &fech)
     this->fechaModificacion = fech;
 }
 
+void InfDoc::setNumPal(const int &val)
+{
+    this->numPal = val;
+}
+
+void InfDoc::setNumPalSinParada(const int &val)
+{
+    this->numPalSinParada = val;
+}
+
+void InfDoc::setNumPalDiferentes(const int &val)
+{
+    this->numPalDiferentes = val;
+}
+
+
 // Setter idDoc
 void InfDoc::setIdDoc(const int &id)
 {
@@ -275,37 +353,37 @@ void InfDoc::setIdDoc(const int &id)
 }
 
 // Getter
-int InfDoc::getIdDoc()
+int InfDoc::getIdDoc() const
 {
     return this->idDoc;
 }
 
 // Getter
-int InfDoc::getNumPal()
+int InfDoc::getNumPal() const
 {
     return this->numPal;
 }
 
 // Getter
-int InfDoc::getNumPalSinParada()
+int InfDoc::getNumPalSinParada() const
 {
     return this->numPalSinParada;
 }
 
 // Getter
-int InfDoc::getNumPalDiferentes()
+int InfDoc::getNumPalDiferentes() const
 {
     return this->numPalDiferentes;
 }
 
 // Getter
-int InfDoc::getTamBytes()
+int InfDoc::getTamBytes() const
 {
     return this->tamBytes;
 }
 
 // Getter 
-Fecha InfDoc::getFecha()
+Fecha InfDoc::getFecha() const
 {
     return this->fechaModificacion;
 }
@@ -314,7 +392,7 @@ Fecha InfDoc::getFecha()
 // Operador salida
 ostream& operator<<(ostream& s, const InfDoc& p) 
 {
-    s << "idDoc:" << p.idDoc << "\tnumPal: " << p.numPal << "\tnumPalSinParada: " << p.numPalSinParada << "\tnumPalDiferentes: " << p.numPalDiferentes << "\ttamBytes: " << p.tamBytes;
+    s << "idDoc: " << p.idDoc << "\tnumPal: " << p.numPal << "\tnumPalSinParada: " << p.numPalSinParada << "\tnumPalDiferentes: " << p.numPalDiferentes << "\ttamBytes: " << p.tamBytes;
     return s;
 }
 
@@ -397,33 +475,90 @@ void InfColeccionDocs::sumTamBytes(const int &tamBytes)
 } 
 
 // Getter
-int InfColeccionDocs::getNumDocs()
+int InfColeccionDocs::getNumDocs() const
 {
     return this->numDocs;
 }
 
 // Getter
-int InfColeccionDocs::getNumTotalPal()
+int InfColeccionDocs::getNumTotalPal() const
 {
     return this->numTotalPal;
 }
 
 // Getter
-int InfColeccionDocs::getNumTotalPalSinParada()
+int InfColeccionDocs::getNumTotalPalSinParada() const
 {
     return this->numTotalPalSinParada;
 }
 
 // Getter
-int InfColeccionDocs::getNumTotalPalDiferentes()
+int InfColeccionDocs::getNumTotalPalDiferentes() const
 {
     return this->numTotalPalDiferentes;
 }
 
 // Getter
-int InfColeccionDocs::getTamBytes()
+int InfColeccionDocs::getTamBytes() const
 {
     return this->tamBytes;
+}
+
+// Decrementa numDocs
+void InfColeccionDocs::decrementaNumDocs()
+{
+    this->numDocs--;
+}
+
+// Decrementa numTotalPalDiferentes
+void InfColeccionDocs::decrementaNumTotalPalDiferentes()
+{
+    this->numTotalPalDiferentes--;
+}
+
+// Resta a num total pal
+void InfColeccionDocs::restaNumTotalPal(const int &valor)
+{
+    this->numTotalPal -= valor;
+}
+
+// Setters
+void InfColeccionDocs::setNumDocs(const int &val)
+{
+    this->numDocs = val;
+}
+
+void InfColeccionDocs::setNumTotalPal(const int &val)
+{
+    this->numTotalPal = val;
+}
+
+void InfColeccionDocs::setNumTotalPalSinParada(const int &val)
+{
+    this->numTotalPalSinParada = val;
+}
+
+void InfColeccionDocs::setNumTotalPalDiferentes(const int &val)
+{
+    this->numTotalPalDiferentes = val;
+}
+
+void InfColeccionDocs::setTamBytes(const int &val)
+{
+    this->tamBytes = val;
+}
+
+
+// Resta al numTotalPalSinParada
+void InfColeccionDocs::restaNumTotalPalSinParada(const int &valor)
+{
+    this->numTotalPalSinParada -= valor;
+}
+
+// Resta al tamaño de bytes
+void InfColeccionDocs::restaTamBytes(const int &valor)
+{
+    this->tamBytes -= valor;
 }
 
 // Operador salida
@@ -468,11 +603,45 @@ InformacionTerminoPregunta& InformacionTerminoPregunta::operator=(const Informac
     return *this;
 }
 
+// Getter
+int InformacionTerminoPregunta::getFt() const
+{
+    return this->ft;
+}
+
+// Getter
+list<int> InformacionTerminoPregunta::getPosTerm() const
+{
+    return this->posTerm;
+}
+
+// Incrementa ft
+void InformacionTerminoPregunta::incrementarFt()
+{
+    this->ft++;
+}
+
+// Setter ft
+void InformacionTerminoPregunta::setFt(const int &valor)
+{
+    this->ft = valor;
+}
+
+// Setea posTerm
+void InformacionTerminoPregunta::insertarPosTerm(const int &pos)
+{
+    this->posTerm.push_back(pos);
+}
+
 // Operador salida
 ostream& operator<<(ostream& s, const InformacionTerminoPregunta& p) 
 {
     s << "ft: " << p.ft;
-    // A continuaci#n se mostrar#an todos los elementos de p.posTerm (?posicion TAB posicion TAB ... posicion, es decir nunca finalizar# en un TAB?): s << ?\t? << posicion;
+    for(list<int>::const_iterator it = p.posTerm.begin(); it != p.posTerm.end(); it++)
+    {
+        s << "\t" << *it;
+    }
+    
     return s;
 }
 
@@ -514,6 +683,51 @@ InformacionPregunta& InformacionPregunta::operator=(const InformacionPregunta &c
         this->numTotalPalSinParada = copia.numTotalPalSinParada;
     }
     return *this;
+}
+
+void InformacionPregunta::incrementaNumTotalPal() // Incrementa en uno la variable numTotalPal
+{
+    this->numTotalPal++;
+}
+
+void InformacionPregunta::incrementaNumTotalPalSinParada() // Incrementa en uno la variable numTotalPalSinParada
+{
+    this->numTotalPalSinParada++;
+}
+
+void InformacionPregunta::incrementaNumTotalPalDiferentes() // Incrementa en uno la variable numTotalPalDiferente
+{
+    this->numTotalPalDiferentes++;
+}   
+
+int InformacionPregunta::getNumTotalPal() const
+{
+    return this->numTotalPal;
+}
+
+int InformacionPregunta::getNumTotalPalSinParada() const
+{
+    return this->numTotalPalSinParada;
+}
+
+int InformacionPregunta::getNumTotalPalDiferentes() const
+{
+    return this->numTotalPalDiferentes;
+}
+
+void InformacionPregunta::setNumTotalPal(const int &val)
+{
+    this->numTotalPal = val;
+}
+
+void InformacionPregunta::setNumTotalPalSinParada(const int &val)
+{
+    this->numTotalPalSinParada = val;
+}
+
+void InformacionPregunta::setNumTotalPalDiferentes(const int &val)
+{
+    this->numTotalPalDiferentes = val;
 }
 
 // Operador salida

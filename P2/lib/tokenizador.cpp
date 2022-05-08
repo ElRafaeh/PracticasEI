@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include <cstdlib>
 #include <string.h>
-
+#include <sstream>
 
 
 // Operador salida
@@ -69,7 +69,7 @@ void Tokenizador::rellenarCaracteresISO()
                 this->caracteresIso[i] = 'u';
                 break;
             default:
-                this->caracteresIso[i] = i;
+                this->caracteresIso[i] = tolower(i);
                 break;
         }                 
     }
@@ -109,7 +109,6 @@ Tokenizador::Tokenizador()
 Tokenizador::~Tokenizador()
 {
     delimiters.clear();
-    bzero(this->caracteresIso, 256);
 }
 
 // Operador de asignacion
@@ -131,22 +130,22 @@ string Tokenizador::convertirSinMayusSinAcen(string str) const
 
     for(it = str.begin(); it != str.end(); it++)
     {
-        minusculas += tolower(this->caracteresIso[(unsigned char)*it]);               
+        minusculas += this->caracteresIso[(unsigned char)*it];               
     }
 
     return minusculas;
 }
 
 // Funcion tokenizar sin casos especiales
-void Tokenizador::TokenizarSinCasosEspeciales(const string& str, list<string>& tokens) const
+void Tokenizador::TokenizarSinCasosEspeciales(const string& str, list<string>& tokens, const string &delim) const
 {
-    string::size_type lastPos = str.find_first_not_of(delimiters,0);
-    string::size_type pos = str.find_first_of(delimiters,lastPos);
+    string::size_type lastPos = str.find_first_not_of(delim,0);
+    string::size_type pos = str.find_first_of(delim,lastPos);
     while(string::npos != pos || string::npos != lastPos)
     {
         tokens.push_back(str.substr(lastPos, pos - lastPos));
-        lastPos = str.find_first_not_of(delimiters, pos);
-        pos = str.find_first_of(delimiters, lastPos);
+        lastPos = str.find_first_not_of(delim, pos);
+        pos = str.find_first_of(delim, lastPos);
     }
 }
 
@@ -409,7 +408,7 @@ void Tokenizador::Tokenizar(string str, list<string>& tokens) const
     if(pasarAminuscSinAcentos) { str = convertirSinMayusSinAcen(str); }
 
     // Comprueba si queremos tokenizar con los casos especiales o no 
-    casosEspeciales ? TokenizarCasosEspeciales(str, tokens, delimiters) : TokenizarSinCasosEspeciales(str, tokens);  
+    casosEspeciales ? TokenizarCasosEspeciales(str, tokens, delimiters) : TokenizarSinCasosEspeciales(str, tokens, delimiters);  
 }
 
 // Versi?n del tokenizador de ficheros CLASE

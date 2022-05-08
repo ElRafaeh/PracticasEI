@@ -56,12 +56,12 @@ class Tokenizador
 			// Devuelve ?delimiters?
 		void CasosEspeciales(const bool& nuevoCasosEspeciales);
 			// Cambia la variable privada ?casosEspeciales?
-		bool CasosEspeciales();
+		bool CasosEspeciales() const;
 			// Devuelve el contenido de la variable privada ?casosEspeciales?
 		void PasarAminuscSinAcentos (const bool& nuevoPasarAminuscSinAcentos);
 			// Cambia la variable privada ?pasarAminuscSinAcentos?. Atenci?n al formato de codificaci?n del corpus (comando ?file? de Linux). Para la
 			// correcci?n de la pr?ctica se utilizar? el formato actual (ISO-8859).
-		bool PasarAminuscSinAcentos ();
+		bool PasarAminuscSinAcentos() const;
 			// Devuelve el contenido de la variable privada ?pasarAminuscSinAcentos? 
 			
 	private:
@@ -93,6 +93,9 @@ class Tokenizador
 			// Funcion que verifica si se trata de un caso de acronimo o multipalabra y almacena el token
 		string quitarEspeciales(const string &especiales, const string &delimiters) const;
 			// Funcion que devuelve los delimitadores habiendole quitados los delimitadores pasador por argumento
+		char caracteresIso[256];
+			// Array con todos los caracteres
+		void rellenarCaracteresISO();
 };
 
 

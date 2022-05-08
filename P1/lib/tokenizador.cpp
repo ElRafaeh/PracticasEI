@@ -5,6 +5,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <cstdlib>
+#include <string.h>
+
+
 
 // Operador salida
 ostream& operator<<(ostream& os, const Tokenizador& tokenizador)
@@ -40,6 +43,38 @@ void Tokenizador::copia(const Tokenizador& copia)
     this->pasarAminuscSinAcentos = copia.pasarAminuscSinAcentos;
 }
 
+void Tokenizador::rellenarCaracteresISO()
+{
+    // Rellenamos el array de caracteresISO
+    for(unsigned char i = 0; i < 255; i++)
+    {
+        switch (i)
+        {   
+            case 192: case 193: case 196: case 224: case 225: case 228:
+                this->caracteresIso[i] = 'a';
+                break;
+            case 200: case 201: case 203: case 232: case 233: case 235:
+                this->caracteresIso[i] = 'e';
+                break;
+            case 236: case 237: case 239: case 204: case 205: case 207:
+                this->caracteresIso[i] = 'i';
+                break;
+            case 209: 
+                this->caracteresIso[i] = '\361';
+                break;
+            case 210: case 211: case 214: case 242: case 243: case 246:
+                this->caracteresIso[i] = 'o';
+                break;
+            case 249: case 250: case 252: case 217: case 218: case 220:
+                this->caracteresIso[i] = 'u';
+                break;
+            default:
+                this->caracteresIso[i] = tolower(i);
+                break;
+        }                 
+    }
+}
+
 // Constructor
 Tokenizador::Tokenizador(const string& delimitadoresPalabra, const bool& kcasosEspeciales, const bool& minuscSinAcentos)
 {
@@ -47,6 +82,8 @@ Tokenizador::Tokenizador(const string& delimitadoresPalabra, const bool& kcasosE
     this->casosEspeciales = kcasosEspeciales;
     this->pasarAminuscSinAcentos = minuscSinAcentos;
     this->delimiters = eliminaDuplicados(this->delimiters);
+    bzero(this->caracteresIso, 256);
+    rellenarCaracteresISO();
 }
 
 // Constructor de copia
@@ -54,6 +91,8 @@ Tokenizador::Tokenizador(const Tokenizador& copia)
 {
     this->copia(copia);
     this->delimiters = eliminaDuplicados(this->delimiters);
+    bzero(this->caracteresIso, 256);
+    rellenarCaracteresISO();
 }
 
 // Constructor por defecto de la clase
@@ -62,12 +101,15 @@ Tokenizador::Tokenizador()
     this->delimiters = ",;:.-/+*\\ '\"{}[]()<>?!??&#=\t\n\r@";
     this->casosEspeciales = true;
     this->pasarAminuscSinAcentos = false;
+    bzero(this->caracteresIso, 256);
+    rellenarCaracteresISO();
 }
 
 // Destructor de la clase
 Tokenizador::~Tokenizador()
 {
     delimiters.clear();
+    bzero(this->caracteresIso, 256);
 }
 
 // Operador de asignacion
@@ -89,30 +131,7 @@ string Tokenizador::convertirSinMayusSinAcen(string str) const
 
     for(it = str.begin(); it != str.end(); it++)
     {
-        switch (*it)
-        {   
-            case '\300'...'\305': case '\340'...'\345':
-                minusculas += 'a';
-                break;
-            case '\310'...'\313': case '\350'...'\353':
-                minusculas += 'e';
-                break;
-            case '\314'...'\317': case '\354'...'\357':
-                minusculas += 'i';
-                break;
-            case '\321':
-                minusculas += '\361';
-                break;
-            case '\322'...'\326': case '\362'...'\366':
-                minusculas += 'o';
-                break;
-            case '\331'...'\334': case '\371'...'\374':
-                minusculas += 'u';
-                break;
-            default:
-                minusculas += tolower(*it);
-                break;
-        }                 
+        minusculas += this->caracteresIso[(unsigned char)*it];               
     }
 
     return minusculas;
@@ -155,7 +174,7 @@ const string &delimiters) const
         char siguienteAHtpp = str[str.find_first_of(":", lastPos) + 1];
         bool sigueCaracter = (delimitadoresUrl.find(siguienteAHtpp) && siguienteAHtpp != '\0');
 
-        // Si después de los dos puntos no le sigue ningun caracter, no se considera URL
+        // Si despuï¿½s de los dos puntos no le sigue ningun caracter, no se considera URL
         if(!sigueCaracter) return false;
 
         pos = str.find_first_of(delimitadoresUrl, lastPos);
@@ -173,7 +192,7 @@ const string &delimiters) const
 bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delimitadoresDecimal, const string &delimiters) const
 {
     string puntoComa = ".,", tokenAcumulador, numeros = "0123456789";
-    // Variables a usar en el método
+    // Variables a usar en el mï¿½todo
     string::size_type posAnterior = delimiters.find(str[pos-1]), posPosterior = delimiters.find(str[pos+1]), 
     posAux= str.find_first_of(delimitadoresDecimal, lastPos), almacenaPrimerLastPos = lastPos, almacenaPrimerPos = pos;
 
@@ -198,7 +217,7 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
             return false;
         }
 
-        // Si el delimitador siguiente es un punto o una coma, guardamos el caracter. Si no no se guardará y almacenaremos el token
+        // Si el delimitador siguiente es un punto o una coma, guardamos el caracter. Si no no se guardarï¿½ y almacenaremos el token
         if(str[pos] == '.' || str[pos] == ',')
         {
             tokenAcumulador += siguienteAacumular + str[pos];
@@ -221,14 +240,14 @@ bool Tokenizador::casoDecimal(list<string> &tokens, const string &str, string::s
         posPosterior = delimiters.find(str[pos+1]);
 
         // Si la posicion del delimitador es igual al ultimo delimitador o una de las dos posiciones almacenadas anteriormente es un delimitador 
-        // se procederá con el guardado del token
+        // se procederï¿½ con el guardado del token
         if (pos == posAux || posPosterior != string::npos || posAnterior != string::npos || str[pos+1] == '\0')
         {
             siguienteAacumular = str.substr(lastPos, pos-lastPos);
             string caracteresFinales = "%$", caracterFinal;
             bool almacenaCaracter = false;
 
-            // Si el último subsstring a almacenar no son todo números se devuelve false, si no almacenamos
+            // Si el ï¿½ltimo subsstring a almacenar no son todo nï¿½meros se devuelve false, si no almacenamos
             if(siguienteAacumular.find_first_not_of(numeros) != string::npos) 
             { 
                 // Si se encuentran los simbolos & o % se almacena en otro token a parte, se pondra el valor booleano almacenaCaracter a true
@@ -376,13 +395,14 @@ void Tokenizador::TokenizarCasosEspeciales(const string &str, list<string> &toke
     }
 }
 
+
 // Funcion tokenizar que devuelve una lista de tokens
 void Tokenizador::Tokenizar(string str, list<string>& tokens) const
 {
     // Borramos la lista de tokens
     tokens.clear();
 
-    // Hacemos una copia de la variable privada delimiters y le metemos los delimitadors espacio y salto de línea
+    // Hacemos una copia de la variable privada delimiters y le metemos los delimitadors espacio y salto de lï¿½nea
     string delimiters = eliminaDuplicados(this->delimiters + " \n");
 
     // Comprobamos si la variable booleana para pasar a minuscula y sin acentos esta activa o no
@@ -513,7 +533,7 @@ void Tokenizador::CasosEspeciales(const bool& nuevoCasosEspeciales)
 }
 
 // Devuelve la variable casos especiales
-bool Tokenizador::CasosEspeciales() 
+bool Tokenizador::CasosEspeciales() const
 {
     return casosEspeciales;
 }
@@ -525,7 +545,7 @@ void Tokenizador::PasarAminuscSinAcentos(const bool& nuevoPasarAminuscSinAcentos
 }
 
 // Devuelve la variable pasaMinusculas...
-bool Tokenizador::PasarAminuscSinAcentos()
+bool Tokenizador::PasarAminuscSinAcentos() const 
 {
     return pasarAminuscSinAcentos;
 }

@@ -1,4 +1,3 @@
-/home/tad/12-13/eiTokenizador/fichPrueba.txt
 /home/tad/12-13/eiTokenizador/corpus/aas-100-mg-comprimidos-20-comprimidos.txt
 /home/tad/12-13/eiTokenizador/corpus/aas-100-mg-comprimidos-500-comprimidos.txt
 /home/tad/12-13/eiTokenizador/corpus/aas-500-mg-comprimidos-20-comprimidos.txt

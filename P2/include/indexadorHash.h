@@ -145,7 +145,7 @@ class IndexadorHash {
             /* Devuelve true si hay una pregunta indexada (con al menos un término
             que no sea palabra de parada, o sea, que haya algún término indexado en
             indicePregunta), devolviéndo ?pregunta? en ?preg? */
-        bool DevuelvePregunta(const string& word, InformacionTerminoPregunta& inf) const;
+        bool DevuelvePregunta(const string &word, InformacionTerminoPregunta& inf) const;
             /* Devuelve true si word (aplicándole el tratamiento de stemming y
             mayúsculas correspondiente) está indexado en la pregunta, devolviendo su
             información almacenada ?inf?. En caso que no esté, devolvería ?inf?
@@ -317,6 +317,8 @@ class IndexadorHash {
             // en stopWords
         bool IndexarDocumento(const string &documento, int idDoc = 0);
             // Devuelve true si consigue indexar el documento. Guarda la información a indexar del documento
+        string aplicarStemYMayus(string) const; 
+            // Se le aplica stemming y el tratamiento de mayusculas a la palabra
 
     friend ostream& operator<<(ostream& s, const IndexadorHash& p) 
     {

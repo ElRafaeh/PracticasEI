@@ -1,26 +1,24 @@
 .PHONY= clean
-
-CC = g++
+CC=g++
 OPTIONS= -g -std=gnu++0x
 DEBUG= #-D DEBUG
 LIBDIR=lib
 INCLUDEDIR=include
-_OBJ= tokenizador.o indexadorInformacion.o indexadorHash.o stemmer.o
-OBJ = $(patsubst %,$(LIBDIR)/%,$(_OBJ)) 
+_OBJ= indexadorHash.o tokenizador.o stemmer.o indexadorInformacion.o
+OBJ = $(patsubst %,$(LIBDIR)/%,$(_OBJ))
 
-all: practica1
+all: indexador
 
-practica1: src/main.cpp $(OBJ)
-	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) src/main.cpp $(OBJ) -o practica1
+indexador:	src/main.cpp $(OBJ)
+	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) src/main.cpp $(OBJ) -o indexador
 
 $(LIBDIR)/%.o : $(LIBDIR)/%.cpp $(INCLUDEDIR)/%.h
 	$(CC) $(OPTIONS) $(DEBUG) -c -I$(INCLUDEDIR) -o $@ $<
-
 clean:
-	rm -f $(OBJ) 
+	rm -f $(OBJ)
+	
+debug: debug.cpp $(OBJ)
+	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) debug.cpp $(OBJ) -o debug
 
-tiempos: main.cpp $(OBJ)
-	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) main.cpp $(OBJ) -o main
-
-debug: src/main.cpp $(OBJ)
-	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) src/main.cpp $(OBJ) -o src/main
+tiempos: tiempos.cpp $(OBJ)
+	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) tiempos.cpp $(OBJ) -o tiempos

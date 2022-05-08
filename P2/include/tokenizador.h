@@ -63,9 +63,10 @@ class Tokenizador
 			// correcci?n de la pr?ctica se utilizar? el formato actual (ISO-8859).
 		bool PasarAminuscSinAcentos() const;
 			// Devuelve el contenido de la variable privada ?pasarAminuscSinAcentos? 
-			
+		string convertirSinMayusSinAcen(string) const;
+			// Funcion auxiliar para quitar mayusculas y acentos a un string pasado
 	private:
-		void TokenizarSinCasosEspeciales(const string& str, list<string>& tokens) const; 
+		void TokenizarSinCasosEspeciales(const string& str, list<string>& tokens, const string &delimiters) const; 
 			//Funci?n para tokenizar sin casos especiales activados
 		void TokenizarCasosEspeciales(const string& str, list<string>& tokens, const string &delimiters) const; 
 			//Funci?n para tokenizar con casos especiales activados
@@ -81,8 +82,6 @@ class Tokenizador
 			// Funcion auxiliar que elimina duplicados de un string
 		void copia(const Tokenizador&); 
 			// Funcion auxiliar para copiar el tokenizador pasado
-		string convertirSinMayusSinAcen(string) const;
-			// Funcion auxiliar para quitar mayusculas y acentos a un string pasado
 		bool casoUrl(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim, const string &delimiters) const;
 			// Funci?n que verifica si se trata de un caso Url o no, y mete el tokens con la URL
 		bool casoDecimal(list<string> &tokens, const string &str, string::size_type &pos, string::size_type &lastPos, const string &delim,const string &delimiters) const;
