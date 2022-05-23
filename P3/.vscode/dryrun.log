@@ -1,0 +1,10 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/rafa/Escritorio/EI/PracticasEI/P3'
+g++ -g -std=gnu++0x  -c -Iinclude -o lib/indexadorHash.o lib/indexadorHash.cpp
+g++ -g -std=gnu++0x  -c -Iinclude -o lib/tokenizador.o lib/tokenizador.cpp
+g++ -g -std=gnu++0x  -c -Iinclude -o lib/stemmer.o lib/stemmer.cpp
+g++ -g -std=gnu++0x  -c -Iinclude -o lib/indexadorInformacion.o lib/indexadorInformacion.cpp
+g++ -g -std=gnu++0x  -c -Iinclude -o lib/buscador.o lib/buscador.cpp
+g++ -g -std=gnu++0x  -Iinclude src/main.cpp lib/indexadorHash.o lib/tokenizador.o lib/stemmer.o lib/indexadorInformacion.o lib/buscador.o -o buscador
+make: Leaving directory '/home/rafa/Escritorio/EI/PracticasEI/P3'
+ 

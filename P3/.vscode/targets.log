@@ -1,0 +1,527 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 4.2.1
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2016 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Mon May 23 17:53:40 2022
+
+# Variables
+
+# 'override' directive
+GNUMAKEFLAGS := 
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# environment
+DESKTOP_SESSION = ubuntu
+# makefile (from 'makefile', line 3)
+OPTIONS = -g -std=gnu++0x
+# default
+.SHELLFLAGS := -c
+# makefile (from 'makefile', line 8)
+OBJ = $(patsubst %,$(LIBDIR)/%,$(_OBJ))
+# environment
+XDG_SESSION_CLASS = user
+# environment
+SNAP_COMMON = /var/snap/code/common
+# environment
+XDG_SESSION_TYPE = x11
+# environment
+VSCODE_LOG_NATIVE = false
+# environment
+NVM_INC = /home/rafa/.nvm/versions/node/v16.15.0/include/node
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+XAUTHORITY = /run/user/1000/gdm/Xauthority
+# environment
+GDMSESSION = ubuntu
+# environment
+XMODIFIERS = @im=ibus
+# makefile
+CURDIR := /home/rafa/Escritorio/EI/PracticasEI/P3
+# makefile
+SHELL = /bin/sh
+# environment
+SNAP_DATA = /var/snap/code/97
+# environment
+VTE_VERSION = 6003
+# environment
+VSCODE_NLS_CONFIG = {"locale":"es","availableLanguages":{"*":"es"},"_languagePackId":"125a9a608456aa5e8a25d0a18c7b1d68.es","_translationsConfigFile":"/home/rafa/.config/Code/clp/125a9a608456aa5e8a25d0a18c7b1d68.es/tcf.json","_cacheRoot":"/home/rafa/.config/Code/clp/125a9a608456aa5e8a25d0a18c7b1d68.es","_resolvedLanguagePackCoreLocation":"/home/rafa/.config/Code/clp/125a9a608456aa5e8a25d0a18c7b1d68.es/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5","_corruptedFile":"/home/rafa/.config/Code/clp/125a9a608456aa5e8a25d0a18c7b1d68.es/corrupted.info","_languagePackSupport":true}
+# environment
+JOURNAL_STREAM = 8:46805
+# environment
+XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
+# environment
+SNAP_INSTANCE_NAME = code
+# environment
+SNAP_ARCH = amd64
+# makefile (from 'makefile', line 1)
+MAKEFILE_LIST :=  makefile
+# makefile (from 'makefile', line 1)
+.PHONY = clean
+# automatic
+@F = $(notdir $@)
+# environment
+IM_CONFIG_PHASE = 1
+# makefile (from 'makefile', line 4)
+DEBUG = 
+# environment
+USERNAME = rafa
+# environment
+XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus,guid=30eb8c3f20048fb1ffdca879628b9026
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+MANAGERPID = 1310
+# environment
+LESSOPEN = | /usr/bin/lesspipe %s
+# environment
+VSCODE_CWD = /home/rafa/Escritorio/EI/PracticasEI/P3
+# environment
+GSETTINGS_SCHEMA_DIR = /snap/code/97/usr/share/glib-2.0/schemas
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+PATH = /home/rafa/.nvm/versions/node/v16.15.0/bin:/home/rafa/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+# environment
+GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
+# environment
+SESSION_MANAGER = local/rafa-OMEN-by-HP-Laptop-15-dc1xxx:@/tmp/.ICE-unix/1784,unix/rafa-OMEN-by-HP-Laptop-15-dc1xxx:/tmp/.ICE-unix/1784
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+GDK_PIXBUF_MODULE_FILE = /home/rafa/snap/code/common/.cache/gdk-pixbuf-loaders.cache
+# environment
+SNAP = /snap/code/97
+# environment
+NVM_BIN = /home/rafa/.nvm/versions/node/v16.15.0/bin
+# environment
+SNAP_VERSION = c3511e6c
+# environment
+XDG_MENU_PREFIX = gnome-
+# environment
+VSCODE_LOG_STACK = false
+# environment
+DISABLE_WAYLAND = 1
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+INVOCATION_ID = c390dc1ea25745b094e7e371c5b83809
+# environment
+GDK_PIXBUF_MODULEDIR = /snap/code/97/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+# environment
+LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+# environment
+XDG_SESSION_DESKTOP = ubuntu
+# environment
+SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+# automatic
+%F = $(notdir $%)
+# environment
+DISPLAY = :0
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+SNAP_INSTANCE_KEY = 
+# environment
+PWD = /home/rafa/Escritorio/EI/PracticasEI/P3
+# default
+.LOADED := 
+# environment
+SSH_AGENT_PID = 1734
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
+# environment
+GTK_MODULES = gail:atk-bridge
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+HOME = /home/rafa
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
+# environment
+VSCODE_CLI = 1
+# environment
+VSCODE_CODE_CACHE_PATH = /home/rafa/.config/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
+# environment
+LOGNAME = rafa
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
+# environment
+SNAP_CONTEXT = QX-cI_Uq5QwW7ZeV9H5O9O40tX600lM0nN0cdmQ2m-W4lfcrIL0x
+# environment
+NVM_CD_FLAGS = 
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+SNAP_USER_COMMON = /home/rafa/snap/code/common
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# environment
+GNOME_DESKTOP_SESSION_ID = this-is-deprecated
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+MAKELEVEL := 0
+# environment
+SNAP_REAL_HOME = /home/rafa
+# environment
+COLORTERM = truecolor
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+QT_IM_MODULE = ibus
+# environment
+SNAP_USER_DATA = /home/rafa/snap/code/97
+# environment
+SHLVL = 1
+# makefile (from 'makefile', line 2)
+CC = g++
+# environment
+GNOME_SHELL_SESSION_MODE = ubuntu
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-dd008db5-dc51-424c-86eb-b011eb5d53a3.sock
+# default
+MAKE_VERSION := 4.2.1
+# environment
+USER = rafa
+# environment
+SNAP_REVISION = 97
+# makefile
+.DEFAULT_GOAL := all
+# environment
+XDG_CURRENT_DESKTOP = Unity
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# default
+MAKE_COMMAND := make
+# makefile (from 'makefile', line 5)
+LIBDIR = lib
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-a64fb57e-1.67.2-main.sock
+# makefile
+MAKEFLAGS = pqrR
+# environment
+MFLAGS = -pqrR
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+NVM_DIR = /home/rafa/.nvm
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+GDK_BACKEND = x11
+# automatic
++F = $(notdir $+)
+# environment
+QT_ACCESSIBILITY = 1
+# default
+MAKEFILES := 
+# environment
+SNAP_COOKIE = QX-cI_Uq5QwW7ZeV9H5O9O40tX600lM0nN0cdmQ2m-W4lfcrIL0x
+# automatic
+<F = $(notdir $<)
+# environment
+SNAP_NAME = code
+# environment
+LC_ALL = C
+# environment
+DBUS_STARTER_BUS_TYPE = session
+# makefile (from 'makefile', line 6)
+INCLUDEDIR = include
+# environment
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/e2d8cd7f_80a6_41c1_8fe8_d229d46ea4d5
+# automatic
+^F = $(notdir $^)
+# makefile (from 'makefile', line 7)
+_OBJ = indexadorHash.o tokenizador.o stemmer.o indexadorInformacion.o buscador.o
+# environment
+GNOME_TERMINAL_SERVICE = :1.103
+# default
+SUFFIXES := 
+# environment
+SNAP_REEXEC = 
+# environment
+CHROME_DESKTOP = code-url-handler.desktop
+# environment
+WINDOWPATH = 2
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# default
+.RECIPEPREFIX := 
+# environment
+LANG = C
+# environment
+TERM = xterm-256color
+# environment
+VSCODE_PID = 5030
+# environment
+DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=30eb8c3f20048fb1ffdca879628b9026
+# variable set hash-table stats:
+# Load=133/1024=13%, Rehash=0, Collisions=23/177=13%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# lib (device 2053, inode 2641020): 9 files, no impossibilities so far.
+# include (device 2053, inode 2622935): 7 files, no impossibilities so far.
+# . (device 2053, inode 2629302): 13 files, no impossibilities.
+ 
+
+# 29 files, no impossibilities in 3 directories.
+
+# Implicit Rules
+
+lib/%.o: lib/%.cpp include/%.h
+#  recipe to execute (from 'makefile', line 16):
+	$(CC) $(OPTIONS) $(DEBUG) -c -I$(INCLUDEDIR) -o $@ $<
+
+# 1 implicit rules, 0 (0.0%) terminal.
+
+# Files
+
+# Not a target:
+lib/indexadorHash.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-19 19:31:05.679454937
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+include/tokenizador.h:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-07 23:01:49.485228
+#  File has been updated.
+#  Successfully updated.
+
+lib/indexadorInformacion.o: lib/indexadorInformacion.cpp include/indexadorInformacion.h
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'indexadorInformacion'
+#  Last modified 2022-05-19 19:31:21.887393563
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'makefile', line 16):
+	$(CC) $(OPTIONS) $(DEBUG) -c -I$(INCLUDEDIR) -o $@ $<
+
+all: buscador
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/7=0%
+
+lib/stemmer.o: lib/stemmer.cpp include/stemmer.h
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'stemmer'
+#  Last modified 2022-05-12 09:07:45.644332
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'makefile', line 16):
+	$(CC) $(OPTIONS) $(DEBUG) -c -I$(INCLUDEDIR) -o $@ $<
+
+buscador: src/main.cpp lib/indexadorHash.o lib/tokenizador.o lib/stemmer.o lib/indexadorInformacion.o lib/buscador.o
+#  Implicit rule search has not been done.
+#  Last modified 2022-05-19 19:31:22.319391956
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/7=0%
+#  recipe to execute (from 'makefile', line 13):
+	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) src/main.cpp $(OBJ) -o buscador
+
+# Not a target:
+lib/buscador.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-20 18:36:11.126818409
+#  File has been updated.
+#  Successfully updated.
+
+debug: debug.cpp lib/indexadorHash.o lib/tokenizador.o lib/stemmer.o lib/indexadorInformacion.o lib/buscador.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 21):
+	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) debug.cpp $(OBJ) -o debug
+
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-19 19:31:17.643409435
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+include/indexadorInformacion.h:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-19 19:31:16.647413179
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+lib/tokenizador.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-08 13:21:46.465834
+#  File has been updated.
+#  Successfully updated.
+
+tiempos: tiempos.cpp lib/indexadorHash.o lib/tokenizador.o lib/stemmer.o lib/indexadorInformacion.o lib/buscador.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 24):
+	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) tiempos.cpp $(OBJ) -o tiempos
+
+# Not a target:
+include/stemmer.h:
+#  Implicit rule search has been done.
+#  Last modified 2022-04-14 09:34:57.104457
+#  File has been updated.
+#  Successfully updated.
+
+lib/indexadorHash.o: lib/indexadorHash.cpp include/indexadorHash.h
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'indexadorHash'
+#  Last modified 2022-05-19 19:31:21.431395263
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'makefile', line 16):
+	$(CC) $(OPTIONS) $(DEBUG) -c -I$(INCLUDEDIR) -o $@ $<
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+lib/indexadorInformacion.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-19 19:31:05.699454861
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+lib/stemmer.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-04-14 09:34:57.104457
+#  File has been updated.
+#  Successfully updated.
+
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 18):
+	rm -f $(OBJ)
+	
+
+# Not a target:
+include/indexadorHash.h:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-19 19:31:16.695412999
+#  File has been updated.
+#  Successfully updated.
+
+lib/buscador.o: lib/buscador.cpp include/buscador.h
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'buscador'
+#  Last modified 2022-05-19 19:28:19.768282413
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := lib/buscador.o
+# automatic
+# % := 
+# automatic
+# * := buscador
+# automatic
+# + := lib/buscador.cpp include/buscador.h
+# automatic
+# | := 
+# automatic
+# < := lib/buscador.cpp
+# automatic
+# ^ := lib/buscador.cpp include/buscador.h
+# automatic
+# ? := lib/buscador.cpp include/buscador.h
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=1/17=6%
+#  recipe to execute (from 'makefile', line 16):
+	$(CC) $(OPTIONS) $(DEBUG) -c -I$(INCLUDEDIR) -o $@ $<
+
+# Not a target:
+src/main.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-12 09:29:09.192399
+#  File has been updated.
+#  Successfully updated.
+
+lib/tokenizador.o: lib/tokenizador.cpp include/tokenizador.h
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'tokenizador'
+#  Last modified 2022-05-12 09:07:45.388332
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'makefile', line 16):
+	$(CC) $(OPTIONS) $(DEBUG) -c -I$(INCLUDEDIR) -o $@ $<
+
+# Not a target:
+debug.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+tiempos.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+include/buscador.h:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-19 19:46:05.199955672
+#  File has been updated.
+#  Successfully updated.
+
+# files hash-table stats:
+# Load=26/1024=3%, Rehash=0, Collisions=0/82=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 58 / storage = 846 B / avg = 14 B
+# current buf: size = 8162 B / used = 846 B / count = 58 / avg = 14 B
+
+# strcache performance: lookups = 97 / hit rate = 40%
+# hash-table stats:
+# Load=58/8192=1%, Rehash=0, Collisions=2/97=2%
+# Finished Make data base on Mon May 23 17:53:40 2022
+
+ 
