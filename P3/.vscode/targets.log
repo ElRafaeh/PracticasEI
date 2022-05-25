@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon May 23 17:53:40 2022
+# Make data base, printed on Wed May 25 10:07:02 2022
 
 # Variables
 
@@ -55,7 +55,7 @@ VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"es","availableLanguages":{"*":"es"},"_languagePackId":"125a9a608456aa5e8a25d0a18c7b1d68.es","_translationsConfigFile":"/home/rafa/.config/Code/clp/125a9a608456aa5e8a25d0a18c7b1d68.es/tcf.json","_cacheRoot":"/home/rafa/.config/Code/clp/125a9a608456aa5e8a25d0a18c7b1d68.es","_resolvedLanguagePackCoreLocation":"/home/rafa/.config/Code/clp/125a9a608456aa5e8a25d0a18c7b1d68.es/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5","_corruptedFile":"/home/rafa/.config/Code/clp/125a9a608456aa5e8a25d0a18c7b1d68.es/corrupted.info","_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:46805
+JOURNAL_STREAM = 8:49272
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -77,11 +77,11 @@ USERNAME = rafa
 # environment
 XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
-DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus,guid=30eb8c3f20048fb1ffdca879628b9026
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus,guid=586479714c5da190a4276c9e628de250
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 1310
+MANAGERPID = 1302
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -95,7 +95,7 @@ PATH = /home/rafa/.nvm/versions/node/v16.15.0/bin:/home/rafa/.local/bin:/usr/loc
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/rafa-OMEN-by-HP-Laptop-15-dc1xxx:@/tmp/.ICE-unix/1784,unix/rafa-OMEN-by-HP-Laptop-15-dc1xxx:/tmp/.ICE-unix/1784
+SESSION_MANAGER = local/rafa-OMEN-by-HP-Laptop-15-dc1xxx:@/tmp/.ICE-unix/1722,unix/rafa-OMEN-by-HP-Laptop-15-dc1xxx:/tmp/.ICE-unix/1722
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -115,7 +115,7 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = c390dc1ea25745b094e7e371c5b83809
+INVOCATION_ID = 61cddc1fab6d4c3bb9941303d0cc8f85
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/97/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -139,7 +139,7 @@ PWD = /home/rafa/Escritorio/EI/PracticasEI/P3
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1734
+SSH_AGENT_PID = 1675
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -157,7 +157,7 @@ VSCODE_CODE_CACHE_PATH = /home/rafa/.config/Code/CachedData/c3511e6c69bb39013c4a
 # environment
 LOGNAME = rafa
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # environment
@@ -195,7 +195,7 @@ CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-dd008db5-dc51-424c-86eb-b011eb5d53a3.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-25a7ad11-73dd-4e77-98d2-3ffbc59b6202.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -249,13 +249,13 @@ DBUS_STARTER_BUS_TYPE = session
 # makefile (from 'makefile', line 6)
 INCLUDEDIR = include
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/e2d8cd7f_80a6_41c1_8fe8_d229d46ea4d5
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/482b837f_3f7c_4153_b726_cb4f1d5787dc
 # automatic
 ^F = $(notdir $^)
 # makefile (from 'makefile', line 7)
 _OBJ = indexadorHash.o tokenizador.o stemmer.o indexadorInformacion.o buscador.o
 # environment
-GNOME_TERMINAL_SERVICE = :1.103
+GNOME_TERMINAL_SERVICE = :1.107
 # default
 SUFFIXES := 
 # environment
@@ -273,11 +273,12 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 5030
+VSCODE_PID = 3889
 # environment
-DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=30eb8c3f20048fb1ffdca879628b9026
+ 
+DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=586479714c5da190a4276c9e628de250
 # variable set hash-table stats:
-# Load=133/1024=13%, Rehash=0, Collisions=23/177=13%
+# Load=133/1024=13%, Rehash=0, Collisions=25/180=14%
 
 # Pattern-specific Variable Values
 
@@ -287,10 +288,9 @@ DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=30eb8c3f20048fb1ffdca87
 
 # lib (device 2053, inode 2641020): 9 files, no impossibilities so far.
 # include (device 2053, inode 2622935): 7 files, no impossibilities so far.
-# . (device 2053, inode 2629302): 13 files, no impossibilities.
- 
+# . (device 2053, inode 2629302): 24 files, no impossibilities.
 
-# 29 files, no impossibilities in 3 directories.
+# 40 files, no impossibilities in 3 directories.
 
 # Implicit Rules
 
@@ -305,7 +305,7 @@ lib/%.o: lib/%.cpp include/%.h
 # Not a target:
 lib/indexadorHash.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-19 19:31:05.679454937
+#  Last modified 2022-05-23 18:04:44.972854817
 #  File has been updated.
 #  Successfully updated.
 
@@ -325,6 +325,7 @@ lib/indexadorInformacion.o: lib/indexadorInformacion.cpp include/indexadorInform
 #  recipe to execute (from 'makefile', line 16):
 	$(CC) $(OPTIONS) $(DEBUG) -c -I$(INCLUDEDIR) -o $@ $<
 
+ 
 all: buscador
 #  Command line target.
 #  Implicit rule search has been done.
@@ -332,7 +333,7 @@ all: buscador
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/7=0%
+# Load=0/32=0%, Rehash=0, Collisions=0/10=0%
 
 lib/stemmer.o: lib/stemmer.cpp include/stemmer.h
 #  Implicit rule search has been done.
@@ -345,18 +346,41 @@ lib/stemmer.o: lib/stemmer.cpp include/stemmer.h
 
 buscador: src/main.cpp lib/indexadorHash.o lib/tokenizador.o lib/stemmer.o lib/indexadorInformacion.o lib/buscador.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-05-19 19:31:22.319391956
+#  Implicit/static pattern stem: ''
+#  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
+# automatic
+# @ := buscador
+# automatic
+# % := 
+# automatic
+# * := 
+# automatic
+# + := src/main.cpp lib/indexadorHash.o lib/tokenizador.o lib/stemmer.o lib/indexadorInformacion.o lib/buscador.o
+# automatic
+# | := 
+# automatic
+# < := src/main.cpp
+# automatic
+# ^ := src/main.cpp lib/indexadorHash.o lib/tokenizador.o lib/stemmer.o lib/indexadorInformacion.o lib/buscador.o
+# automatic
+# ? := src/main.cpp lib/indexadorHash.o lib/tokenizador.o lib/stemmer.o lib/indexadorInformacion.o lib/buscador.o
 # variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/7=0%
+# Load=8/32=25%, Rehash=0, Collisions=1/18=6%
 #  recipe to execute (from 'makefile', line 13):
 	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) src/main.cpp $(OBJ) -o buscador
 
 # Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 lib/buscador.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-20 18:36:11.126818409
+#  Last modified 2022-05-24 12:33:09.821741594
 #  File has been updated.
 #  Successfully updated.
 
@@ -405,7 +429,7 @@ include/stemmer.h:
 lib/indexadorHash.o: lib/indexadorHash.cpp include/indexadorHash.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'indexadorHash'
-#  Last modified 2022-05-19 19:31:21.431395263
+#  Last modified 2022-05-24 12:32:21.801677855
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'makefile', line 16):
@@ -442,41 +466,23 @@ clean:
 # Not a target:
 include/indexadorHash.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-19 19:31:16.695412999
+#  Last modified 2022-05-23 18:03:46.500717381
 #  File has been updated.
 #  Successfully updated.
 
 lib/buscador.o: lib/buscador.cpp include/buscador.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'buscador'
-#  Last modified 2022-05-19 19:28:19.768282413
+#  Last modified 2022-05-24 12:33:12.097744446
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# automatic
-# @ := lib/buscador.o
-# automatic
-# % := 
-# automatic
-# * := buscador
-# automatic
-# + := lib/buscador.cpp include/buscador.h
-# automatic
-# | := 
-# automatic
-# < := lib/buscador.cpp
-# automatic
-# ^ := lib/buscador.cpp include/buscador.h
-# automatic
-# ? := lib/buscador.cpp include/buscador.h
-# variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=1/17=6%
+#  Successfully updated.
 #  recipe to execute (from 'makefile', line 16):
 	$(CC) $(OPTIONS) $(DEBUG) -c -I$(INCLUDEDIR) -o $@ $<
 
 # Not a target:
 src/main.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-12 09:29:09.192399
+#  Last modified 2022-05-25 10:06:18.478893478
 #  File has been updated.
 #  Successfully updated.
 
@@ -504,24 +510,24 @@ tiempos.cpp:
 # Not a target:
 include/buscador.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-19 19:46:05.199955672
+#  Last modified 2022-05-24 12:06:29.80349651
 #  File has been updated.
 #  Successfully updated.
 
 # files hash-table stats:
-# Load=26/1024=3%, Rehash=0, Collisions=0/82=0%
+# Load=26/1024=3%, Rehash=0, Collisions=0/83=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 58 / storage = 846 B / avg = 14 B
-# current buf: size = 8162 B / used = 846 B / count = 58 / avg = 14 B
+# strcache buffers: 1 (0) / strings = 68 / storage = 1026 B / avg = 15 B
+# current buf: size = 8162 B / used = 1026 B / count = 68 / avg = 15 B
 
-# strcache performance: lookups = 97 / hit rate = 40%
+# strcache performance: lookups = 109 / hit rate = 37%
 # hash-table stats:
-# Load=58/8192=1%, Rehash=0, Collisions=2/97=2%
-# Finished Make data base on Mon May 23 17:53:40 2022
+# Load=68/8192=1%, Rehash=0, Collisions=2/109=2%
+# Finished Make data base on Wed May 25 10:07:02 2022
 
  

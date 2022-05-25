@@ -1,15 +1,20 @@
 #include "indexadorHash.h"
+#include <map>
 #include <queue>
 
 
-
 class ResultadoRI {
-    friend ostream& operator<<(ostream&, const ResultadoRI&);
+    friend ostream& operator<<(ostream &os, const ResultadoRI &res){
+        os << res.vSimilitud << "\t\t" << res.idDoc << "\t" << res.numPregunta << endl;
+        return os;
+    }
     public:
         ResultadoRI(const double& kvSimilitud, const long int& kidDoc, const int& np);
         double VSimilitud() const;
         long int IdDoc() const;
-        bool operator< (const ResultadoRI& lhs) const;
+        int getNumPregunta() const;
+        bool operator<(const ResultadoRI& lhs) const;
+        bool operator>(const ResultadoRI& lhs) const;
     private:
         double vSimilitud;
         long int idDoc;
@@ -19,15 +24,15 @@ class ResultadoRI {
 
 class Buscador: public IndexadorHash {
     friend ostream& operator<<(ostream& s, const Buscador& p) {
-        /* string preg;
+        string preg;
         s << "Buscador: " << endl;
-        if(DevuelvePregunta(preg))
+        if(p.DevuelvePregunta(preg))
             s << "\tPregunta indexada: " << preg << endl;
         else
             s << "\tNo hay ninguna pregunta indexada" << endl;
         s << "\tDatos del indexador: " << endl << (IndexadorHash) p;
         // Invoca a la sobrecarga de la salida del Indexador
-        return s; */
+        return s;
     }
     public:
         Buscador(const string& directorioIndexacion, const int& f);
@@ -44,7 +49,7 @@ class Buscador: public IndexadorHash {
             // En los métodos de ?Buscar? solo se evaluarán TODOS los documentos que
             //contengan alguno de los términos de la pregunta (tras eliminar las
             //palabras de parada).
-        bool Buscar(const int& numDocumentos = 99999);
+        bool Buscar(const int& numDocumentos = 99999, const int &nump=0);
             // Devuelve true si en IndexadorHash.pregunta hay indexada una pregunta
             //no vacía con algún término con contenido, y si sobre esa pregunta se
             //finaliza la búsqueda correctamente con la fórmula de similitud indicada
@@ -126,8 +131,7 @@ class Buscador: public IndexadorHash {
             >
             fich_salida_trec_eval.res?, para obtener los datos de precisión y
             cobertura*/
-        bool ImprimirResultadoBusqueda(const int& numDocumentos, const string&
-        nombreFichero) const;
+        bool ImprimirResultadoBusqueda(const int& numDocumentos, const string& nombreFichero) const;
             // Lo mismo que ?ImprimirResultadoBusqueda()? pero guardando la salida
             // en el fichero de nombre ?nombreFichero?
             // Devolverá false si no consigue crear correctamente el archivo
@@ -154,7 +158,8 @@ class Buscador: public IndexadorHash {
             // Se inicializará con todos los campos vacíos y la variable privada
             ?formSimilitud? con valor 0 y las constantes de cada modelo: ?c = 2; k1
             = 1.2; b = 0.75?*/
-        priority_queue<ResultadoRI> docsOrdenados;
+        map<ResultadoRI, double, greater<ResultadoRI>> docsOrdenados;
+        //priority_queue<ResultadoRI> docsOrdenados;
             /* Contendrá los resultados de la última búsqueda realizada en orden
             decreciente según la relevancia sobre la pregunta. El tipo
             ?priority_queue? podrá modificarse por cuestiones de eficiencia. La
@@ -168,4 +173,7 @@ class Buscador: public IndexadorHash {
             // Constante del modelo BM25
         double b;
             // Constante del modelo BM25
+        ResultadoRI calculoSimilitudDFR(const InfDoc&, const int &nump);
+        ResultadoRI calculoSimilitudBM25(const InfDoc&, const int &nump);
+        string BuscarDocumento(const int &) const;
 };

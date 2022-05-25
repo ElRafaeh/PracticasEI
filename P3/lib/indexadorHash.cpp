@@ -5,8 +5,6 @@
 #include <unistd.h>
 #include <sstream>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/sysinfo.h>
 #include "stdio.h"
 #include "string.h"
 
@@ -51,8 +49,6 @@ IndexadorHash::IndexadorHash(const string& fichStopWords, const string& delimita
 
     this->almacenarEnDisco = almEnDisco;
     this->almacenarPosTerm = almPosTerm;
-    this->indicesDisco = 0;
-    this->indicesDocsDisco = 0;
     GuardarStopWords(fichStopWords);
     this->ficheroStopWords = fichStopWords;
 }
@@ -65,8 +61,6 @@ IndexadorHash::IndexadorHash()
     this->directorioIndice = get_current_dir_name();
     this->almacenarEnDisco = false;
     this->almacenarPosTerm = true;
-    this->indicesDisco = 0;
-    this->indicesDocsDisco = 0;
     this->ficheroStopWords = "./StopWordsEspanyol.txt";
     GuardarStopWords(ficheroStopWords);
 }
@@ -93,9 +87,6 @@ IndexadorHash::IndexadorHash(const IndexadorHash &copia)
     this->directorioIndice = copia.directorioIndice;
     this->almacenarEnDisco = copia.almacenarEnDisco;
     this->almacenarPosTerm = copia.almacenarPosTerm;
-    this->indicesEnDisco = copia.indicesEnDisco;
-    this->indicesDisco = 0;
-    this->indicesDocsDisco = 0;
 }
 
 // Destructor
@@ -112,10 +103,6 @@ IndexadorHash::~IndexadorHash()
     this->directorioIndice = "";
     this->almacenarEnDisco = false;
     this->almacenarPosTerm = false; 
-    this->indicesDisco = 0;
-    this->indicesDocsDisco = 0;
-    this->indicesEnDisco.clear();
-    this->indicesDocsEnDisco.clear();
 }
 
 // Operador asignacion
@@ -136,125 +123,8 @@ IndexadorHash& IndexadorHash::operator=(const IndexadorHash &copia)
         this->directorioIndice = copia.directorioIndice;
         this->almacenarEnDisco = copia.almacenarEnDisco;
         this->almacenarPosTerm = copia.almacenarPosTerm;
-        this->indicesDisco = 0;
-        this->indicesDocsDisco = 0;
     }
     return *this;
-}
-
-// Guardar el �ndice en disco
-bool IndexadorHash::GuardarIndiceDisco()
-{
-    struct stat dir;
-    string guardar = "";
-
-    int err = stat(this->directorioIndice.c_str(), &dir);
-    // Si no existe el directorio se crea
-    if(err==-1 || !S_ISDIR(dir.st_mode))
-        system(("mkdir "+this->directorioIndice).c_str());
-
-    fstream fich((directorioIndice+"/indiceDisco" + to_string(this->indicesDisco)).c_str(), ios::out);
-
-    if(fich.is_open())
-    {
-        // Guardamos indice
-        for(unordered_map<string, InformacionTermino>::const_iterator it = indice.begin(); it != indice.end(); it++)
-        {
-            guardar += it->first + " ";
-            guardar += to_string(it->second.getFtc()) + " ";
-            for(unordered_map<int, InfTermDoc>::const_iterator itIndiceTerm = it->second.l_docs.begin(); itIndiceTerm != it->second.l_docs.end(); itIndiceTerm++)
-            {
-                guardar += to_string(itIndiceTerm->first) + " ";
-                guardar += to_string(itIndiceTerm->second.getFt()) + " ";
-                
-                for(list<int>::const_iterator itPosTerm = itIndiceTerm->second.posTerm.begin(); itPosTerm != itIndiceTerm->second.posTerm.end(); itPosTerm++)
-                {
-                    guardar += to_string(*itPosTerm) + ",";
-                }
-                guardar += "\t";
-            }
-            guardar += "\n";
-        }
-        // Incrementamos la variable de veces que se ha guardado en disco
-        this->indicesDisco++;
-        // Insertamos el fichero donde se ha guardado la primera indexacion
-        this->indicesEnDisco.push_back((directorioIndice+ "/indiceDisco" + to_string(this->indicesDisco)));
-
-        // Escribimos en el fichero y lo guardamos
-        fich << guardar;
-        fich.close();
-
-        return true;
-    }
-    return false;
-}
-
-int parseLine(char* line){ 
-    int i = strlen(line); 
-    while (*line < '0' || *line > '9')  line++; 
-    line[i-3] = '\0'; 
-    i = atoi(line); 
-    return i; 
-}
-
-// Funci�n para sacar el tama�o de memoria utilizado por 
-int getValue(){ //Note: this value is in KB! 
-    FILE* file = fopen("/proc/self/status", "r"); 
-    int result = -1; char line[128]; 
-    while (fgets(line, 128, file) != NULL){ 
-        if (strncmp(line, "VmRSS:", 6) == 0){ 
-            result = parseLine(line); break; 
-        } 
-    } 
-    fclose(file); 
-    return result; 
-}
-
-// Guardar el �ndiceDocs en disco
-bool IndexadorHash::GuardarIndiceDocsDisco()
-{
-    struct stat dir;
-    string guardar = "";
-
-    int err = stat(this->directorioIndice.c_str(), &dir);
-    // Si no existe el directorio se crea
-    if(err==-1 || !S_ISDIR(dir.st_mode))
-        system(("mkdir "+this->directorioIndice).c_str());
-
-    fstream fich((directorioIndice+"/indiceDocsDisco"+to_string(this->indicesDocsDisco)).c_str(), ios::out);
-
-    if(fich.is_open())
-    {
-        // Guardamos el indiceDocs
-        for(unordered_map<string, InfDoc>::const_iterator it = indiceDocs.begin(); it != indiceDocs.end(); it++)
-        {
-            guardar += it->first + ",";
-            guardar += to_string(it->second.getIdDoc()) + ",";
-            guardar += to_string(it->second.getNumPal()) + ",";
-            guardar += to_string(it->second.getNumPalSinParada()) + ",";
-            guardar += to_string(it->second.getNumPalDiferentes()) + ",";
-            guardar += to_string(it->second.getTamBytes()) + ",";
-            struct tm fecha = it->second.getFecha().getFecha();
-            guardar += to_string(fecha.tm_sec) + ",";
-            guardar += to_string(fecha.tm_min) + ",";
-            guardar += to_string(fecha.tm_hour) + ",";
-            guardar += to_string(fecha.tm_mday) + ",";
-            guardar += to_string(fecha.tm_mon) + ",";
-            guardar += to_string(fecha.tm_year) + ", ";
-        }
-        
-        // Incrementamos la variable de veces que se ha guardado en disco indiceDocs
-        this->indicesDocsDisco++;
-        // Insertamos el fichero donde se ha guardado la primera indexacion
-        this->indicesDocsEnDisco.push_back((directorioIndice+ "/indiceDocsDisco" + to_string(this->indicesDocsDisco)));
-
-        // Escribimos en el fichero y lo guardamos
-        fich << guardar;
-        fich.close();
-
-        return true;
-    }
-    return false;
 }
 
 // Metodo para indexar documento
@@ -426,30 +296,6 @@ bool IndexadorHash::Indexar(const string &ficheroDocumentos)
             else
             {
                 devolver = IndexarDocumento(documento);
-            }
-            // Si la variable almacenarEnDisco est� a true, almacenamos la indexacion en el disco duro
-            if(almacenarEnDisco)
-            {
-                struct sysinfo memInfo; 
-                sysinfo (&memInfo);
-                // Sacamos la cantidad de memoria total
-                //long long totalPhysMem = memInfo.totalram; 
-                //totalPhysMem *= memInfo.mem_unit;
-
-                // Sacamos la cantidad de memoria utilizada
-                long long physMemUsed = getValue();
-
-                // Si la memoria que estamos usando es mayor o igual a la memoria total del sistema vamos a guardar los indices en memoria principal
-                if(physMemUsed >= 10000)
-                {
-                    cout << "Mem: " << physMemUsed << endl;
-
-                    // Guardamos en disco
-                    GuardarIndiceDisco();
-                    GuardarIndiceDocsDisco();
-                    //indice.clear();
-                    //indiceDocs.clear();
-                }
             }
         }
 
